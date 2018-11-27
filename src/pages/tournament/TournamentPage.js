@@ -1,9 +1,10 @@
 import React from 'react';
-import TournamentForm from './TournamentForm';
-import useModal from '../../hooks/useModal';
+import { Card, CardBody, CardHeader, Button } from 'reactstrap';
 import useDate from '../../hooks/useData';
+import useModal from '../../hooks/useModal';
 import Table from '../../components/Table';
-import { Card, CardBody, CardHeader } from 'reactstrap';
+import TournamentForm from './TournamentForm';
+import TournamentSearchForm from './TournamentSearchForm';
 
 function Tournament() {
   const [
@@ -15,27 +16,44 @@ function Tournament() {
     message
   ] = useDate('tournament');
 
-  const [open, value, openModal, closeModal] = useModal();
+  const [isModalOpen, modalValue, openModal, closeModal] = useModal();
 
   return (
     <>
       <Card className="mt-3 mb-3">
-        <CardBody>
+        <CardHeader>
           <h1>Tournaments</h1>
-          <TournamentForm />
+        </CardHeader>
+        <CardBody>
+          <TournamentSearchForm get={getTournaments} />
         </CardBody>
       </Card>
       <Card>
         <CardBody>
+          <Button color="primary" onClick={() => openModal(null)}>
+            Add Tournament
+          </Button>
+          {message && <p>{message.message}</p>}
           <Table
             noInfo
             labels={['Name', 'Edition']}
             values={['name', 'edition']}
             items={tournaments}
             itemsKey={'tournament_id'}
+            del={deleteTournaments}
+            update={openModal}
           />
         </CardBody>
       </Card>
+      {isModalOpen && (
+        <TournamentForm
+          isModalOpen={isModalOpen}
+          closeModal={closeModal}
+          add={addTournaments}
+          patch={patchTournaments}
+          modalValue={modalValue}
+        />
+      )}
     </>
   );
 }

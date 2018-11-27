@@ -2,7 +2,15 @@ import React from 'react';
 
 import { Table, Button } from 'reactstrap';
 
-function TableWrapper({ noInfo, labels, values, items, itemsKey }) {
+function TableWrapper({
+  noInfo,
+  labels,
+  values,
+  items,
+  itemsKey,
+  del,
+  update
+}) {
   return (
     <Table striped>
       <thead>
@@ -31,10 +39,16 @@ function TableWrapper({ noInfo, labels, values, items, itemsKey }) {
                   Info
                 </Button>
               ) : null}
-              <Button className="mr-2 float-right" color="danger" type="button">
+              <Button
+                onClick={() => del(item[itemsKey])}
+                className="mr-2 float-right"
+                color="danger"
+                type="button"
+              >
                 Delete
               </Button>
               <Button
+                onClick={() => update(item)}
                 className="mr-2 float-right"
                 color="warning"
                 type="button"

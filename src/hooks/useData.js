@@ -39,7 +39,7 @@ const useData = function(endpoint) {
 
   const addData = async params => {
     try {
-      const response = axios.post(`${endpoint}`, params);
+      const response = await axios.post(`${endpoint}`, params);
       if (response.status === 200) {
         setData([...data, response.data.created]);
         setMessage('success', `successfully created tournament`);
