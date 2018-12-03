@@ -1,18 +1,12 @@
 import React from 'react';
-import { Formik, Form, ErrorMessage, Field } from 'formik';
+import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
-import {
-  Button,
-  Row,
-  Col,
-  FormGroup,
-  Label,
-  FormFeedback,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter
-} from 'reactstrap';
+import Input from '../../components/Input';
+import FormGroup from '../../components/FormGroup';
+import Label from '../../components/Label';
+import Button from '../../components/Button';
+import Row from '../../components/Row';
+import ErrorInfo from '../../components/ErrorInfo';
 
 const TournamentValidationSchema = Yup.object().shape({
   name: Yup.string()
@@ -27,82 +21,69 @@ const invalidInput = (errors, touched) => {
   return `form-control ${errors && touched ? 'is-invalid' : null}`;
 };
 
-const TournamentForm = ({
-  isModalOpen,
-  closeModal,
-  add,
-  patch,
-  modalValue
-}) => {
+const TournamentForm = ({ hideModifyView, add, patch, modifyValue }) => {
   const initialValues =
-    modalValue !== null ? modalValue : { name: 'example', edition: 1 };
+    modifyValue !== null ? modifyValue : { name: 'example', edition: 1 };
 
   return (
     <Formik
       initialValues={initialValues}
       enableReinitialize={true}
       onSubmit={async (values, { setSubmitting }) => {
-        if (modalValue === null) await add(values);
-        else await patch(modalValue.tournament_id, values);
+        if (modifyValue === null) await add(values);
+        else await patch(modifyValue.tournament_id, values);
         setSubmitting(false);
-        closeModal();
+        hideModifyView();
       }}
       validationSchema={TournamentValidationSchema}
     >
-      {({ isSubmitting, errors, touched }) => (
-        <Modal isOpen={isModalOpen} toggle={closeModal}>
-          <Form>
-            <ModalHeader>
-              <h3>{`${modalValue === null ? 'Create' : 'Edit'} tournament`}</h3>
-            </ModalHeader>
-            <ModalBody>
-              <Row form>
-                <Col md={12}>
-                  <FormGroup>
-                    <Label htmlFor="name">Name:</Label>
-                    <Field
-                      className={invalidInput(errors.name, touched.name)}
-                      type="text"
-                      name="name"
-                    />
-                    <ErrorMessage name="name">
-                      {errorMessage => (
-                        <FormFeedback>{errorMessage}</FormFeedback>
-                      )}
-                    </ErrorMessage>
-                  </FormGroup>
-                </Col>
-                <Col md={12}>
-                  <FormGroup>
-                    <Label htmlFor="edition">Edition:</Label>
-                    <Field
-                      className={invalidInput(errors.edition, touched.edition)}
-                      type="number"
-                      name="edition"
-                    />
-                    <ErrorMessage name="edition">
-                      {errorMessage => (
-                        <FormFeedback>{errorMessage}</FormFeedback>
-                      )}
-                    </ErrorMessage>
-                  </FormGroup>
-                </Col>
-              </Row>
-            </ModalBody>
-            <ModalFooter>
-              <Button
-                onClick={() => closeModal()}
-                color="secondary"
-                type="button"
-              >
-                Close
-              </Button>
-              <Button color="primary" type="submit" disabled={isSubmitting}>
-                Submit
-              </Button>
-            </ModalFooter>
-          </Form>
-        </Modal>
+      {({
+        isSubmitting,
+        errors,
+        touched,
+        handleBlur,
+        handleChange,
+        values
+      }) => (
+        <Form>
+          <h3>{`${modifyValue === null ? 'Create' : 'Edit'} tournament`}</h3>
+          <Row>
+            <FormGroup>
+              <Label htmlFor="name">Name:</Label>
+              <Input
+                className={invalidInput(errors.name, touched.name)}
+                type="text"
+                name="name"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.name}
+                invalid={errors.name}
+              />
+              {errors.name ? <ErrorInfo>{errors.name}</ErrorInfo> : null}
+            </FormGroup>
+            <FormGroup>
+              <Label htmlFor="edition">Edition:</Label>
+              <Input
+                className={invalidInput(errors.edition, touched.edition)}
+                type="number"
+                name="edition"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.edition}
+                invalid={errors.edition}
+              />
+              {errors.edition ? <ErrorInfo>{errors.edition}</ErrorInfo> : null}
+            </FormGroup>
+          </Row>
+          <Row>
+            <Button color="success" type="submit" disabled={isSubmitting}>
+              Submit
+            </Button>
+            <Button onClick={() => hideModifyView()} color="info" type="button">
+              Close
+            </Button>
+          </Row>
+        </Form>
       )}
     </Formik>
   );

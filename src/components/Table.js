@@ -1,25 +1,38 @@
 import React from 'react';
+import styled from 'styled-components';
+import Button from './Button';
 
-import { Table, Button } from 'reactstrap';
+const Table = styled.table`
+  width: 100%;
+  border-collapse: collapse;
 
-function TableWrapper({
-  noInfo,
-  labels,
-  values,
-  items,
-  itemsKey,
-  del,
-  update
-}) {
+  thead {
+    background-color: 
+    background-color: ${({ theme }) => theme.color.gray};
+    text-align: left;
+  }
+
+  td,
+  th {
+    padding: ${({ theme }) => theme.spacing.s};
+    border: 1px solid ${({ theme }) => theme.color.gray};
+  }
+
+  td:last-child,th:last-child {
+    width: ${({ info }) => (info ? '220px' : '150px')};
+  }
+`;
+
+function TableWrapper({ info, labels, values, items, itemsKey, del, update }) {
   return (
-    <Table striped>
+    <Table info={info}>
       <thead>
         <tr>
           {labels.map(label => (
             <th key={label}>{label}</th>
           ))}
           <th>
-            <span className="float-right mr-2">Actions</span>
+            <span>Actions</span>
           </th>
         </tr>
       </thead>
@@ -30,30 +43,26 @@ function TableWrapper({
               <td key={value}>{item[value]}</td>
             ))}
             <td>
-              {!noInfo ? (
-                <Button
-                  className="mr-2 float-right"
-                  color="primary"
-                  type="button"
-                >
-                  Info
+              {info ? (
+                <Button color="info" type="button">
+                  <span role="img" aria-label="info">
+                    🔍
+                  </span>
                 </Button>
               ) : null}
+              <Button onClick={() => update(item)} color="edit" type="button">
+                <span role="img" aria-label="update">
+                  ✍
+                </span>
+              </Button>
               <Button
                 onClick={() => del(item[itemsKey])}
-                className="mr-2 float-right"
                 color="danger"
                 type="button"
               >
-                Delete
-              </Button>
-              <Button
-                onClick={() => update(item)}
-                className="mr-2 float-right"
-                color="warning"
-                type="button"
-              >
-                Edit
+                <span role="img" aria-label="delete">
+                  ❌
+                </span>
               </Button>
             </td>
           </tr>

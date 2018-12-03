@@ -1,6 +1,10 @@
 import React from 'react';
-import { Formik, Form, Field } from 'formik';
-import { Row, Col, Label, Button } from 'reactstrap';
+import { Formik, Form } from 'formik';
+import FormGroup from '../../components/FormGroup';
+import Input from '../../components/Input';
+import Label from '../../components/Label';
+import Row from '../../components/Row';
+import Button from '../../components/Button';
 
 function TournamentSearchForm({ get }) {
   const initialValues = { name: '', edition_from: '', edition_to: '' };
@@ -15,6 +19,7 @@ function TournamentSearchForm({ get }) {
       initialValues={initialValues}
       enableReinitialize={true}
       onSubmit={async (values, { setSubmitting }) => {
+        console.log(values);
         const parameters = {};
         for (const value in values) {
           if (values[value] !== '') parameters[value] = values[value];
@@ -23,61 +28,55 @@ function TournamentSearchForm({ get }) {
         setSubmitting(false);
       }}
     >
-      {({ isSubmitting, resetForm }) => (
+      {({ isSubmitting, resetForm, handleBlur, handleChange, values }) => (
         <Form>
-          <Row form>
-            <Col md={6}>
+          <h3>Search tournaments</h3>
+          <Row>
+            <FormGroup>
               <Label htmlFor="name">Name:</Label>
-              <Field
-                className="form-control mb-2"
-                placeholder="tournament's name"
+              <Input
+                id="name"
                 type="text"
-                name="name"
+                placeholder="tournament name"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.name}
               />
-            </Col>
-            <Col md={6}>
-              <Label htmlFor="edition_from">Edition:</Label>
-              <Row form>
-                <Col md={6} className="mb-2">
-                  <Field
-                    className="form-control"
-                    placeholder="from"
-                    type="number"
-                    name="edition_from"
-                  />
-                </Col>
-                <Col md={6} className="mb-3">
-                  <Field
-                    className="form-control"
-                    placeholder="to"
-                    type="number"
-                    name="edition_to"
-                  />
-                </Col>
-              </Row>
-            </Col>
+            </FormGroup>
+            <FormGroup>
+              <Label>Edition:</Label>
+              <Input
+                id="edition_from"
+                type="number"
+                placeholder="from"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.edition_from}
+              />
+              <Input
+                id="edition_to"
+                type="number"
+                placeholder="to"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.edition_to}
+              />
+            </FormGroup>
           </Row>
-          <Row form>
-            <Col md={12}>
-              <Button
-                className="mr-2"
-                color="primary"
-                type="submit"
-                disabled={isSubmitting}
-              >
-                Search
-              </Button>
-              <Button
-                color="primary"
-                type="button"
-                disabled={isSubmitting}
-                onClick={() => {
-                  clearFilters(resetForm);
-                }}
-              >
-                Clear filters
-              </Button>
-            </Col>
+          <Row>
+            <Button color="info" type="submit" disabled={isSubmitting}>
+              Search
+            </Button>
+            <Button
+              color="info"
+              type="button"
+              disabled={isSubmitting}
+              onClick={() => {
+                clearFilters(resetForm);
+              }}
+            >
+              Clear filters
+            </Button>
           </Row>
         </Form>
       )}
