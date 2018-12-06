@@ -18,7 +18,8 @@ const theme = {
   },
   font: {
     base: '16px',
-    error: '14px'
+    error: '14px',
+    bold: '700'
   },
   spacing: {
     s: '8px',
