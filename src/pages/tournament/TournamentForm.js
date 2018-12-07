@@ -1,12 +1,10 @@
 import React from 'react';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
-import Input from '../../components/Input';
-import FormGroup from '../../components/FormGroup';
-import Label from '../../components/Label';
 import Button from '../../components/Button';
 import Row from '../../components/Row';
-import ErrorInfo from '../../components/ErrorInfo';
+import FormGroupInput from '../../components/FormGroupInput';
+import FormContext from '../../context/FormContext';
 
 const TournamentValidationSchema = Yup.object().shape({
   name: Yup.string()
@@ -17,13 +15,9 @@ const TournamentValidationSchema = Yup.object().shape({
     .required('Required')
 });
 
-const invalidInput = (errors, touched) => {
-  return `form-control ${errors && touched ? 'is-invalid' : null}`;
-};
-
 const TournamentForm = ({ hideModifyView, add, patch, modifyValue }) => {
   const initialValues =
-    modifyValue !== null ? modifyValue : { name: 'example', edition: 1 };
+    modifyValue !== null ? modifyValue : { name: '', edition: '' };
 
   return (
     <Formik
@@ -45,45 +39,41 @@ const TournamentForm = ({ hideModifyView, add, patch, modifyValue }) => {
         handleChange,
         values
       }) => (
-        <Form>
-          <h3>{`${modifyValue === null ? 'Create' : 'Edit'} tournament`}</h3>
-          <Row>
-            <FormGroup>
-              <Label htmlFor="name">Name:</Label>
-              <Input
-                className={invalidInput(errors.name, touched.name)}
-                type="text"
+        <FormContext.Provider
+          value={{ handleBlur, handleChange, values, errors, touched }}
+        >
+          <Form>
+            <h3>{`${modifyValue === null ? 'Create' : 'Edit'} Tournament`}</h3>
+            <Row>
+              <FormGroupInput
+                errorInfo
                 name="name"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.name}
-                invalid={errors.name}
+                type="text"
+                placeholder="tournament name"
+                label="Name:"
               />
-              {errors.name ? <ErrorInfo>{errors.name}</ErrorInfo> : null}
-            </FormGroup>
-            <FormGroup>
-              <Label htmlFor="edition">Edition:</Label>
-              <Input
-                className={invalidInput(errors.edition, touched.edition)}
+              <FormGroupInput
+                errorInfo
+                name="number"
                 type="number"
-                name="edition"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.edition}
-                invalid={errors.edition}
+                placeholder="tournament edition"
+                label="Edition:"
               />
-              {errors.edition ? <ErrorInfo>{errors.edition}</ErrorInfo> : null}
-            </FormGroup>
-          </Row>
-          <Row>
-            <Button color="success" type="submit" disabled={isSubmitting}>
-              Submit
-            </Button>
-            <Button onClick={() => hideModifyView()} color="info" type="button">
-              Close
-            </Button>
-          </Row>
-        </Form>
+            </Row>
+            <Row>
+              <Button color="success" type="submit" disabled={isSubmitting}>
+                Submit
+              </Button>
+              <Button
+                onClick={() => hideModifyView()}
+                color="info"
+                type="button"
+              >
+                Close
+              </Button>
+            </Row>
+          </Form>
+        </FormContext.Provider>
       )}
     </Formik>
   );

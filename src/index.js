@@ -7,6 +7,9 @@ import Tournament from './pages/tournament/TournamentPage';
 import { ThemeProvider } from 'styled-components';
 import theme from './style/theme';
 import GlobalStyle from './style/GlobalStyle';
+import Content from './components/Content';
+import Side from './components/Side';
+import SkiJumpingHill from './pages/skiJumpingHill/SkiJumpingHillPage';
 
 const App = function() {
   return (
@@ -14,10 +17,14 @@ const App = function() {
       <>
         <GlobalStyle />
         <BrowserRouter>
-          <Switch>
-            <Route path="/" exact component={Tournament} />
-            <Route path="/tournament" component={Tournament} />
-          </Switch>
+          <Content>
+            <Side />
+            <Switch>
+              <Route path="/" exact component={Tournament} />
+              <Route path="/tournament" component={Tournament} />
+              <Route path="/ski-jumping-hill" component={SkiJumpingHill} />
+            </Switch>
+          </Content>
         </BrowserRouter>
       </>
     </ThemeProvider>

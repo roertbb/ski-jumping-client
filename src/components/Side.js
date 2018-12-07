@@ -15,6 +15,7 @@ const Side = styled.div`
 
 const NavItem = styled(NavLink)`
   text-decoration: none;
+  color: ${({ theme }) => theme.color.black};
 
   &.${props => props.activeClassName} {
     font-weight: ${({ theme }) => theme.font.bold};
@@ -28,6 +29,11 @@ function SideNavigation() {
         <li>
           <NavItem activeClassName="active" to="/tournament">
             Tournament
+          </NavItem>
+        </li>
+        <li>
+          <NavItem activeClassName="active" to="/ski-jumping-hill">
+            Ski Jumping Hill
           </NavItem>
         </li>
       </ul>
