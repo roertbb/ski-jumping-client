@@ -2,21 +2,18 @@ import React from 'react';
 import useDate from '../../hooks/useData';
 import useModal from '../../hooks/useModal';
 import Table from '../../components/Table';
-import TournamentForm from './TournamentForm';
-import TournamentSearchForm from './TournamentSearchForm';
+// import TournamentForm from './TournamentForm';
+// import TournamentSearchForm from './TournamentSearchForm';
 import ContentWrapper from '../../components/ContentWrapper';
 import Container from '../../components/Container';
 import Button from '../../components/Button';
+import TeamForm from './TeamForm';
+import TeamSearchForm from './TeamSearchForm';
 
-function Tournament() {
-  const [
-    tournaments,
-    getTournaments,
-    addTournaments,
-    patchTournaments,
-    deleteTournaments,
-    message
-  ] = useDate('tournament');
+function Team() {
+  const [teams, getTeams, addTeams, patchTeams, deleteTeams, message] = useDate(
+    'team'
+  );
 
   const [
     isModifyView,
@@ -29,32 +26,32 @@ function Tournament() {
     <>
       <ContentWrapper>
         <Container blank>
-          <h1>Tournament</h1>
+          <h1>Team</h1>
           <Button color="info" onClick={() => showModifyView(null)}>
-            Add tournament
+            Add team
           </Button>
         </Container>
         {isModifyView ? (
           <Container>
-            <TournamentForm
+            <TeamForm
               hideModifyView={hideModifyView}
-              add={addTournaments}
-              patch={patchTournaments}
+              add={addTeams}
+              patch={patchTeams}
               modifyValue={modifyValue}
             />
           </Container>
         ) : (
           <>
             <Container>
-              <TournamentSearchForm get={getTournaments} />
+              <TeamSearchForm get={getTeams} />
             </Container>
             <Container>
               <Table
-                labels={['Name', 'Edition']}
-                values={['name', 'edition']}
-                items={tournaments}
-                itemsKey={'tournament_id'}
-                del={deleteTournaments}
+                labels={['Team Name', 'Classification']}
+                values={['team', 'classification']}
+                items={teams}
+                itemsKey={'team_id'}
+                del={deleteTeams}
                 update={showModifyView}
               />
             </Container>
@@ -65,4 +62,4 @@ function Tournament() {
   );
 }
 
-export default Tournament;
+export default Team;

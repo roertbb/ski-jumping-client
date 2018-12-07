@@ -1,23 +1,19 @@
 import React from 'react';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
-import Button from '../../components/Button';
 import Row from '../../components/Row';
-import FormGroupInput from '../../components/FormGroupInput';
+import Button from '../../components/Button';
 import FormContext from '../../context/FormContext';
+import FormGroupInput from '../../components/FormGroupInput';
 
-const TournamentValidationSchema = Yup.object().shape({
-  name: Yup.string()
+const TeamValidationSchema = Yup.object().shape({
+  team: Yup.string()
     .max(30, 'Too Long!')
-    .required('Required'),
-  edition: Yup.number()
-    .max(999, 'Too Long!')
-    .required('Required')
+    .required(`Required`)
 });
 
-const TournamentForm = ({ hideModifyView, add, patch, modifyValue }) => {
-  const initialValues =
-    modifyValue !== null ? modifyValue : { name: '', edition: '' };
+const TeamForm = ({ hideModifyView, add, patch, modifyValue }) => {
+  const initialValues = modifyValue !== null ? modifyValue : { team: '' };
 
   return (
     <Formik
@@ -25,11 +21,11 @@ const TournamentForm = ({ hideModifyView, add, patch, modifyValue }) => {
       enableReinitialize={true}
       onSubmit={async (values, { setSubmitting }) => {
         if (modifyValue === null) await add(values);
-        else await patch(modifyValue.tournament_id, values);
+        else await patch(modifyValue.team_id, values);
         setSubmitting(false);
         hideModifyView();
       }}
-      validationSchema={TournamentValidationSchema}
+      validationSchema={TeamValidationSchema}
     >
       {({
         isSubmitting,
@@ -43,25 +39,26 @@ const TournamentForm = ({ hideModifyView, add, patch, modifyValue }) => {
           value={{ handleBlur, handleChange, values, errors, touched }}
         >
           <Form>
-            <h3>{`${modifyValue === null ? 'Create' : 'Edit'} Tournament`}</h3>
+            <h3>{`${modifyValue === null ? 'Create' : 'Edit'} Team`}</h3>
             <Row>
               <FormGroupInput
                 errorInfo
-                name="name"
+                name="team"
                 type="text"
-                placeholder="tournament name"
+                placeholder="team name"
                 label="Name:"
               />
-              <FormGroupInput
-                errorInfo
-                name="edition"
-                type="number"
-                placeholder="tournament edition"
-                label="Edition:"
-              />
             </Row>
+
             <Row>
-              <Button color="success" type="submit" disabled={isSubmitting}>
+              <Button
+                onClick={() => {
+                  console.log(values, errors, touched);
+                }}
+                color="success"
+                type="submit"
+                disabled={isSubmitting}
+              >
                 Submit
               </Button>
               <Button
@@ -79,4 +76,4 @@ const TournamentForm = ({ hideModifyView, add, patch, modifyValue }) => {
   );
 };
 
-export default TournamentForm;
+export default TeamForm;

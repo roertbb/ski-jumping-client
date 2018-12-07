@@ -10,6 +10,7 @@ import GlobalStyle from './style/GlobalStyle';
 import Content from './components/Content';
 import Side from './components/Side';
 import SkiJumpingHill from './pages/skiJumpingHill/SkiJumpingHillPage';
+import Team from './pages/team/TeamPage';
 
 const App = function() {
   return (
@@ -23,6 +24,7 @@ const App = function() {
               <Route path="/" exact component={Tournament} />
               <Route path="/tournament" component={Tournament} />
               <Route path="/ski-jumping-hill" component={SkiJumpingHill} />
+              <Route path="/team" component={Team} />
             </Switch>
           </Content>
         </BrowserRouter>

@@ -8,6 +8,8 @@ import Table from '../../components/Table';
 import SkiJumpingHillForm from './SkiJumpingHillForm';
 import SkiJumpingHillSearchForm from './SkiJumpingHillSearchForm';
 
+import Info from '../../components/Info';
+
 function SkiJumpingHillPage() {
   const [
     skiJumpingHill,
@@ -15,7 +17,9 @@ function SkiJumpingHillPage() {
     addSkiJumpingHill,
     patchSkiJumpingHill,
     deleteSkiJumpingHill,
-    message
+    message,
+    choosenHill,
+    setChoosenHill
   ] = useData('ski-jumping-hill');
 
   const [
@@ -25,6 +29,39 @@ function SkiJumpingHillPage() {
     hideModifyView
   ] = useModal();
 
+  let view = (
+    <>
+      <Container>
+        <SkiJumpingHillSearchForm get={getSkiJumpingHill} />
+      </Container>
+      <Container>
+        <Table
+          info={setChoosenHill}
+          labels={['Name', 'Country', 'City']}
+          values={['name', 'country', 'city']}
+          items={skiJumpingHill}
+          itemsKey={'ski_jumping_hill_id'}
+          del={deleteSkiJumpingHill}
+          update={showModifyView}
+        />
+      </Container>
+    </>
+  );
+  if (isModifyView) {
+    view = (
+      <Container>
+        <SkiJumpingHillForm
+          hideModifyView={hideModifyView}
+          add={addSkiJumpingHill}
+          patch={patchSkiJumpingHill}
+          modifyValue={modifyValue}
+        />
+      </Container>
+    );
+  } else if (choosenHill) {
+    view = <Info info={choosenHill} chooseItem={setChoosenHill} />;
+  }
+
   return (
     <ContentWrapper>
       <Container blank>
@@ -33,34 +70,7 @@ function SkiJumpingHillPage() {
           Add Ski Jumping Hill
         </Button>
       </Container>
-      {isModifyView ? (
-        <Container>
-          <SkiJumpingHillForm
-            hideModifyView={hideModifyView}
-            add={addSkiJumpingHill}
-            patch={patchSkiJumpingHill}
-            modifyValue={modifyValue}
-          />
-        </Container>
-      ) : (
-        <>
-          <Container>
-            <SkiJumpingHillSearchForm get={getSkiJumpingHill} />
-          </Container>
-          <Container>
-            <h3>Search results</h3>
-            <Table
-              info
-              labels={['Name', 'Country', 'City']}
-              values={['name', 'country', 'city']}
-              items={skiJumpingHill}
-              itemsKey={'ski_jumping_hill_id'}
-              del={deleteSkiJumpingHill}
-              update={showModifyView}
-            />
-          </Container>
-        </>
-      )}
+      {view}
     </ContentWrapper>
   );
 }

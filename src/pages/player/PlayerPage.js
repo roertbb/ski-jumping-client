@@ -2,21 +2,21 @@ import React from 'react';
 import useDate from '../../hooks/useData';
 import useModal from '../../hooks/useModal';
 import Table from '../../components/Table';
-import TournamentForm from './TournamentForm';
-import TournamentSearchForm from './TournamentSearchForm';
+// import TournamentForm from './TournamentForm';
+// import TournamentSearchForm from './TournamentSearchForm';
 import ContentWrapper from '../../components/ContentWrapper';
 import Container from '../../components/Container';
 import Button from '../../components/Button';
 
-function Tournament() {
+function Player() {
   const [
-    tournaments,
-    getTournaments,
-    addTournaments,
-    patchTournaments,
-    deleteTournaments,
+    players,
+    getPlayers,
+    addPlayers,
+    patchPlayers,
+    deletePlayers,
     message
-  ] = useDate('tournament');
+  ] = useDate('player');
 
   const [
     isModifyView,
@@ -29,34 +29,34 @@ function Tournament() {
     <>
       <ContentWrapper>
         <Container blank>
-          <h1>Tournament</h1>
+          <h1>Player</h1>
           <Button color="info" onClick={() => showModifyView(null)}>
-            Add tournament
+            Add players
           </Button>
         </Container>
         {isModifyView ? (
           <Container>
-            <TournamentForm
+            {/* <TournamentForm
               hideModifyView={hideModifyView}
               add={addTournaments}
               patch={patchTournaments}
               modifyValue={modifyValue}
-            />
+            /> */}
           </Container>
         ) : (
           <>
             <Container>
-              <TournamentSearchForm get={getTournaments} />
+              {/* <TournamentSearchForm get={getTournaments} /> */}
             </Container>
             <Container>
-              <Table
+              {/* <Table
                 labels={['Name', 'Edition']}
                 values={['name', 'edition']}
                 items={tournaments}
                 itemsKey={'tournament_id'}
                 del={deleteTournaments}
                 update={showModifyView}
-              />
+              /> */}
             </Container>
           </>
         )}
@@ -65,4 +65,4 @@ function Tournament() {
   );
 }
 
-export default Tournament;
+export default Player;

@@ -4,7 +4,11 @@ import axios from '../axios';
 import useMessage from './useMessage';
 
 const useData = function(endpoint) {
+  const dataId = `${endpoint}_id`.replace('-', '_');
+
   const [data, setData] = useState([]);
+
+  const [choosenItem, setChoosenItem] = useState(null);
 
   useEffect(() => {
     getData();
@@ -29,7 +33,7 @@ const useData = function(endpoint) {
     try {
       const response = await axios.delete(`${endpoint}/${id}`);
       if (response.status === 200) {
-        setData(data.filter(elem => elem.tournament_id !== id));
+        setData(data.filter(elem => elem[dataId] !== id));
         setMessage('success', `successfully deleted tournament`);
       }
     } catch (error) {
@@ -54,9 +58,7 @@ const useData = function(endpoint) {
       const response = await axios.patch(`${endpoint}/${id}`, params);
       if (response.status === 201) {
         setData(
-          data.map(elem =>
-            elem.tournament_id === id ? response.data.updated : elem
-          )
+          data.map(elem => (elem[dataId] === id ? response.data.updated : elem))
         );
         setMessage('success', `successfully updated tournament`);
       }
@@ -67,7 +69,16 @@ const useData = function(endpoint) {
 
   const [message, setMessage] = useMessage();
 
-  return [data, getData, addData, patchData, deleteData, message];
+  return [
+    data,
+    getData,
+    addData,
+    patchData,
+    deleteData,
+    message,
+    choosenItem,
+    setChoosenItem
+  ];
 };
 
 export default useData;
