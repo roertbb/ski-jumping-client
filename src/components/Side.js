@@ -41,6 +41,11 @@ function SideNavigation() {
             Team
           </NavItem>
         </li>
+        <li>
+          <NavItem activeClassName="active" to="/ski-jumper">
+            Ski Jumper
+          </NavItem>
+        </li>
       </ul>
     </Side>
   );

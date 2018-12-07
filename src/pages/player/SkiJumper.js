@@ -7,16 +7,17 @@ import Table from '../../components/Table';
 import ContentWrapper from '../../components/ContentWrapper';
 import Container from '../../components/Container';
 import Button from '../../components/Button';
+import SkiJumperForm from './SkiJumperForm';
 
 function Player() {
   const [
-    players,
-    getPlayers,
-    addPlayers,
-    patchPlayers,
-    deletePlayers,
+    skiJumpers,
+    getSkiJumpers,
+    addSkiJumpers,
+    patchSkiJumpers,
+    deleteSkiJumpers,
     message
-  ] = useDate('player');
+  ] = useDate('ski-jumper');
 
   const [
     isModifyView,
@@ -29,19 +30,19 @@ function Player() {
     <>
       <ContentWrapper>
         <Container blank>
-          <h1>Player</h1>
+          <h1>Ski Jumper</h1>
           <Button color="info" onClick={() => showModifyView(null)}>
-            Add players
+            Add Ski Jumper
           </Button>
         </Container>
         {isModifyView ? (
           <Container>
-            {/* <TournamentForm
+            <SkiJumperForm
               hideModifyView={hideModifyView}
-              add={addTournaments}
-              patch={patchTournaments}
+              add={addSkiJumpers}
+              patch={patchSkiJumpers}
               modifyValue={modifyValue}
-            /> */}
+            />
           </Container>
         ) : (
           <>
@@ -49,14 +50,14 @@ function Player() {
               {/* <TournamentSearchForm get={getTournaments} /> */}
             </Container>
             <Container>
-              {/* <Table
-                labels={['Name', 'Edition']}
-                values={['name', 'edition']}
-                items={tournaments}
-                itemsKey={'tournament_id'}
-                del={deleteTournaments}
+              <Table
+                labels={['Firstname', 'Surname']}
+                values={['first_name', 'surname']}
+                items={skiJumpers}
+                itemsKey={'person_id'}
+                del={deleteSkiJumpers}
                 update={showModifyView}
-              /> */}
+              />
             </Container>
           </>
         )}
