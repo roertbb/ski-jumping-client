@@ -4,7 +4,6 @@ import Row from './Row';
 import Button from './Button';
 
 function Info({ info, chooseItem }) {
-  console.log(info);
   return (
     <>
       <Container>

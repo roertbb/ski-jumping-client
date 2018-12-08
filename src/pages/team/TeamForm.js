@@ -51,14 +51,7 @@ const TeamForm = ({ hideModifyView, add, patch, modifyValue }) => {
             </Row>
 
             <Row>
-              <Button
-                onClick={() => {
-                  console.log(values, errors, touched);
-                }}
-                color="success"
-                type="submit"
-                disabled={isSubmitting}
-              >
+              <Button color="success" type="submit" disabled={isSubmitting}>
                 Submit
               </Button>
               <Button

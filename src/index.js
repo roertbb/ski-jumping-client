@@ -11,8 +11,10 @@ import Content from './components/Content';
 import Side from './components/Side';
 import SkiJumpingHill from './pages/skiJumpingHill/SkiJumpingHillPage';
 import Team from './pages/team/TeamPage';
-import SkiJumper from './pages/player/SkiJumperPage';
+import SkiJumper from './pages/skiJumper/SkiJumperPage';
 import Coach from './pages/coach/CoachPage';
+import IndividualCompetition from './pages/individualCompetition/individualCompetitionPage';
+import TeamCompetition from './pages/teamCompetition/teamCompetitionPage';
 
 const App = function() {
   return (
@@ -29,6 +31,11 @@ const App = function() {
               <Route path="/team" component={Team} />
               <Route path="/ski-jumper" component={SkiJumper} />
               <Route path="/coach" component={Coach} />
+              <Route
+                path="/individual-competition"
+                component={IndividualCompetition}
+              />
+              <Route path="/team-competition" component={TeamCompetition} />
             </Switch>
           </Content>
         </BrowserRouter>

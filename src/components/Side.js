@@ -51,6 +51,16 @@ function SideNavigation() {
             Coach
           </NavItem>
         </li>
+        <li>
+          <NavItem activeClassName="active" to="/individual-competition">
+            Individual Competition
+          </NavItem>
+        </li>
+        <li>
+          <NavItem activeClassName="active" to="/team-competition">
+            Team Competition
+          </NavItem>
+        </li>
       </ul>
     </Side>
   );

@@ -55,7 +55,6 @@ const SkiJumperForm = ({ hideModifyView, add, patch, modifyValue }) => {
       initialValues={initialValues}
       enableReinitialize={true}
       onSubmit={async (values, { setSubmitting }) => {
-        console.log(values);
         if (modifyValue === null) await add(values);
         else await patch(modifyValue.person_id, values);
         setSubmitting(false);
@@ -145,14 +144,7 @@ const SkiJumperForm = ({ hideModifyView, add, patch, modifyValue }) => {
               />
             </Row>
             <Row>
-              <Button
-                onClick={() => {
-                  console.log(values, errors, touched);
-                }}
-                color="success"
-                type="submit"
-                disabled={isSubmitting}
-              >
+              <Button color="success" type="submit" disabled={isSubmitting}>
                 Submit
               </Button>
               <Button

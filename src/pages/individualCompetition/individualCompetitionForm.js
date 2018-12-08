@@ -8,24 +8,31 @@ import FormContext from '../../context/FormContext';
 import FormGroupInput from '../../components/FormGroupInput';
 import FormGroup from '../../components/FormGroup';
 
-const CoachValidationSchema = Yup.object().shape({
-  first_name: Yup.string()
-    .max(30, 'Too Long!')
-    .required(`Required`),
-  surname: Yup.string()
-    .max(30, 'Too Long!')
-    .required(`Required`),
-  birth_date: Yup.date().required(`Required`),
-  team_id: Yup.number().required(`Required`),
-  nationality: Yup.string()
-    .max(30, 'Too Long!')
-    .required(`Required`)
+const IndividualCompetitionValidationSchema = Yup.object().shape({
+  competition_date: Yup.date().required(`Required`),
+  start_gate: Yup.number()
+    .max(99, 'Too Long!')
+    .required('Required'),
+  tournament_id: Yup.number().required('Required'),
+  hill_id: Yup.number().required('Required'),
+  qualification_date: Yup.date().required(`Required`)
 });
 
-const CoachForm = ({ hideModifyView, add, patch, modifyValue }) => {
-  const [teams] = useDate('team');
-  const parsedTeam = teams.reduce((prev, team) => {
-    prev[team.team_id] = team.team;
+const IndividualCompetitionForm = ({
+  hideModifyView,
+  add,
+  patch,
+  modifyValue
+}) => {
+  const [tournaments] = useDate('tournament');
+  const parsedTournament = tournaments.reduce((prev, tournament) => {
+    prev[tournament.tournament_id] = tournament.name;
+    return prev;
+  }, {});
+
+  const [skiJumpingHills] = useDate('ski-jumping-hill');
+  const parsedHills = skiJumpingHills.reduce((prev, hill) => {
+    prev[hill.ski_jumping_hill_id] = hill.name;
     return prev;
   }, {});
 
@@ -33,11 +40,11 @@ const CoachForm = ({ hideModifyView, add, patch, modifyValue }) => {
     modifyValue !== null
       ? modifyValue
       : {
-          first_name: '',
-          surname: '',
-          birth_date: '',
-          team_id: '',
-          nationality: ''
+          competition_date: '',
+          start_gate: '',
+          tournament_id: '',
+          hill_id: '',
+          qualification_date: ''
         };
 
   // draw spinner while loading teams
@@ -47,11 +54,11 @@ const CoachForm = ({ hideModifyView, add, patch, modifyValue }) => {
       enableReinitialize={true}
       onSubmit={async (values, { setSubmitting }) => {
         if (modifyValue === null) await add(values);
-        else await patch(modifyValue.person_id, values);
+        else await patch(modifyValue.competition_id, values);
         setSubmitting(false);
         hideModifyView();
       }}
-      validationSchema={CoachValidationSchema}
+      validationSchema={IndividualCompetitionValidationSchema}
     >
       {({
         isSubmitting,
@@ -65,47 +72,46 @@ const CoachForm = ({ hideModifyView, add, patch, modifyValue }) => {
           value={{ handleBlur, handleChange, values, errors, touched }}
         >
           <Form>
-            <h3>{`${modifyValue === null ? 'Create' : 'Edit'} Coach`}</h3>
+            <h3>{`${
+              modifyValue === null ? 'Create' : 'Edit'
+            } Individual Competitions`}</h3>
             <Row>
               <FormGroupInput
                 errorInfo
-                name="first_name"
-                type="text"
-                placeholder="coach first name"
-                label="Name:"
-              />
-              <FormGroupInput
-                errorInfo
-                name="surname"
-                type="text"
-                placeholder="coach surname"
-                label="Surname:"
-              />
-            </Row>
-            <Row>
-              <FormGroupInput
                 date
-                errorInfo
-                name="birth_date"
+                name="competition_date"
                 type="date"
-                placeholder="coach birth date"
-                label="Birthdate:"
+                label="Date:"
               />
               <FormGroupInput
                 errorInfo
-                name="team_id"
-                placeholder="coach team"
-                label="Team:"
-                options={parsedTeam}
+                name="start_gate"
+                type="text"
+                placeholder="competition start gate"
+                label="Start Gate:"
+              />
+            </Row>
+            <Row>
+              <FormGroupInput
+                name="tournament_id"
+                placeholder="competition tournament"
+                label="Tournament:"
+                options={parsedTournament}
+              />
+              <FormGroupInput
+                name="hill_id"
+                placeholder="ski jumping hill"
+                label="Ski Jumping Hill:"
+                options={parsedHills}
               />
             </Row>
             <Row>
               <FormGroupInput
                 errorInfo
-                name="nationality"
-                type="team"
-                placeholder="coach nationality"
-                label="Nationality:"
+                date
+                name="qualification_date"
+                type="date"
+                label="Qualification Date:"
               />
               <FormGroup />
             </Row>
@@ -128,4 +134,4 @@ const CoachForm = ({ hideModifyView, add, patch, modifyValue }) => {
   );
 };
 
-export default CoachForm;
+export default IndividualCompetitionForm;
