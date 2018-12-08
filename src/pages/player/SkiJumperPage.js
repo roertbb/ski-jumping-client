@@ -2,14 +2,13 @@ import React from 'react';
 import useDate from '../../hooks/useData';
 import useModal from '../../hooks/useModal';
 import Table from '../../components/Table';
-// import TournamentForm from './TournamentForm';
-// import TournamentSearchForm from './TournamentSearchForm';
 import ContentWrapper from '../../components/ContentWrapper';
 import Container from '../../components/Container';
 import Button from '../../components/Button';
 import SkiJumperForm from './SkiJumperForm';
+import SkiJumperSearchForm from './SkiJumperSearchForm';
 
-function Player() {
+function SkiJumper() {
   const [
     skiJumpers,
     getSkiJumpers,
@@ -17,7 +16,7 @@ function Player() {
     patchSkiJumpers,
     deleteSkiJumpers,
     message
-  ] = useDate('ski-jumper');
+  ] = useDate('ski-jumper', 'person_id');
 
   const [
     isModifyView,
@@ -47,7 +46,7 @@ function Player() {
         ) : (
           <>
             <Container>
-              {/* <TournamentSearchForm get={getTournaments} /> */}
+              <SkiJumperSearchForm get={getSkiJumpers} />
             </Container>
             <Container>
               <Table
@@ -66,4 +65,4 @@ function Player() {
   );
 }
 
-export default Player;
+export default SkiJumper;

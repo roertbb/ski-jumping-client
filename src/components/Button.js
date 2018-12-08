@@ -13,7 +13,7 @@ const Button = styled.button`
   padding: ${({ theme }) => theme.spacing.s} ${({ theme }) => theme.spacing.m};
   background-color: ${({ theme, color }) => propToColor(theme, color, false)};
   border: 0;
-  outline: none;
+  /* outline: none; */
   border-radius: ${({ theme }) => theme.spacing.s};
   color: white;
   transition: 0.25s ease-in-out;

@@ -6,8 +6,9 @@ import Row from '../../components/Row';
 import Button from '../../components/Button';
 import FormContext from '../../context/FormContext';
 import FormGroupInput from '../../components/FormGroupInput';
+import FormGroup from '../../components/FormGroup';
 
-const SkiJumperValidationSchema = Yup.object().shape({
+const CoachValidationSchema = Yup.object().shape({
   first_name: Yup.string()
     .max(30, 'Too Long!')
     .required(`Required`),
@@ -16,19 +17,12 @@ const SkiJumperValidationSchema = Yup.object().shape({
     .required(`Required`),
   birth_date: Yup.date().required(`Required`),
   team_id: Yup.number().required(`Required`),
-  fis_id: Yup.number()
-    .max(99999, 'Too Long!')
-    .required('Required'),
-  active: Yup.string().required('Required'),
-  height: Yup.number()
-    .max(999, 'Too Long!')
-    .required('Required'),
-  weight: Yup.number()
-    .max(99, 'Too Long!')
-    .required('Required')
+  nationality: Yup.string()
+    .max(30, 'Too Long!')
+    .required(`Required`)
 });
 
-const SkiJumperForm = ({ hideModifyView, add, patch, modifyValue }) => {
+const CoachForm = ({ hideModifyView, add, patch, modifyValue }) => {
   const [teams] = useDate('team');
   const parsedTeam = teams.reduce((prev, team) => {
     prev[team.team_id] = team.team;
@@ -43,10 +37,7 @@ const SkiJumperForm = ({ hideModifyView, add, patch, modifyValue }) => {
           surname: '',
           birth_date: '',
           team_id: '',
-          fis_id: '',
-          active: '',
-          height: '',
-          weight: ''
+          nationality: ''
         };
 
   // draw spinner while loading teams
@@ -61,7 +52,7 @@ const SkiJumperForm = ({ hideModifyView, add, patch, modifyValue }) => {
         setSubmitting(false);
         hideModifyView();
       }}
-      validationSchema={SkiJumperValidationSchema}
+      validationSchema={CoachValidationSchema}
     >
       {({
         isSubmitting,
@@ -75,20 +66,20 @@ const SkiJumperForm = ({ hideModifyView, add, patch, modifyValue }) => {
           value={{ handleBlur, handleChange, values, errors, touched }}
         >
           <Form>
-            <h3>{`${modifyValue === null ? 'Create' : 'Edit'} Ski Jumper`}</h3>
+            <h3>{`${modifyValue === null ? 'Create' : 'Edit'} Coach`}</h3>
             <Row>
               <FormGroupInput
                 errorInfo
                 name="first_name"
                 type="text"
-                placeholder="ski jumper name"
+                placeholder="coach first name"
                 label="Name:"
               />
               <FormGroupInput
                 errorInfo
                 name="surname"
                 type="text"
-                placeholder="ski jumper surname"
+                placeholder="coach surname"
                 label="Surname:"
               />
             </Row>
@@ -98,13 +89,13 @@ const SkiJumperForm = ({ hideModifyView, add, patch, modifyValue }) => {
                 errorInfo
                 name="birth_date"
                 type="date"
-                placeholder="ski jumper birth date"
+                placeholder="coach birth date"
                 label="Birthdate:"
               />
               <FormGroupInput
                 errorInfo
                 name="team_id"
-                placeholder="ski jumper team"
+                placeholder="coach team"
                 label="Team:"
                 options={parsedTeam}
               />
@@ -112,37 +103,12 @@ const SkiJumperForm = ({ hideModifyView, add, patch, modifyValue }) => {
             <Row>
               <FormGroupInput
                 errorInfo
-                name="fis_id"
-                type="number"
-                placeholder="ski jumper fis id"
-                label="FIS ID:"
+                name="nationality"
+                type="team"
+                placeholder="coach nationality"
+                label="Nationality:"
               />
-              <FormGroupInput
-                errorInfo
-                name="active"
-                placeholder="ski jumper's activity"
-                label="Is ski jumper active:"
-                options={{
-                  y: 'active',
-                  n: 'not active'
-                }}
-              />
-            </Row>
-            <Row>
-              <FormGroupInput
-                errorInfo
-                name="height"
-                type="number"
-                placeholder="ski jumper height"
-                label="Height:"
-              />
-              <FormGroupInput
-                errorInfo
-                name="weight"
-                type="number"
-                placeholder="ski jumper weight"
-                label="Weight:"
-              />
+              <FormGroup />
             </Row>
             <Row>
               <Button
@@ -170,4 +136,4 @@ const SkiJumperForm = ({ hideModifyView, add, patch, modifyValue }) => {
   );
 };
 
-export default SkiJumperForm;
+export default CoachForm;

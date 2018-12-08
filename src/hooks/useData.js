@@ -3,8 +3,8 @@ import queryString from 'query-string';
 import axios from '../axios';
 import useMessage from './useMessage';
 
-const useData = function(endpoint) {
-  const dataId = `${endpoint}_id`.replace('-', '_');
+const useData = function(endpoint, tableId) {
+  const dataId = tableId ? tableId : `${endpoint}_id`.replace('-', '_');
 
   const [data, setData] = useState([]);
 

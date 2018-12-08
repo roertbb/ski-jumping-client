@@ -46,6 +46,11 @@ function SideNavigation() {
             Ski Jumper
           </NavItem>
         </li>
+        <li>
+          <NavItem activeClassName="active" to="/coach">
+            Coach
+          </NavItem>
+        </li>
       </ul>
     </Side>
   );

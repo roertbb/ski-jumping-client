@@ -88,7 +88,7 @@ const SkiJumpingHillForm = ({ hideModifyView, add, patch, modifyValue }) => {
                 name="type"
                 placeholder="ski jumping hill type"
                 label="Type:"
-                options={{ 1: 'value1', 2: 'value2', 3: 'value3' }}
+                options={{ n: 'normal', b: 'big', m: 'mammoth' }}
               />
             </Row>
             <Row>

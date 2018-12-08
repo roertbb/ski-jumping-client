@@ -17,7 +17,11 @@ function FormGroupInput(props) {
       id={props.name}
       onChange={handleChange}
       onBlur={handleBlur}
-      value={values[props.name]}
+      value={
+        !props.date
+          ? values[props.name]
+          : values[props.name] && values[props.name].split('T')[0]
+      }
       invalid={!!props.errorInfo && errors[props.name] && touched[props.name]}
       placeholder={props.placeholder}
     />
@@ -51,7 +55,12 @@ function FormGroupInput(props) {
           placeholder="from"
           onChange={handleChange}
           onBlur={handleBlur}
-          value={values[`${props.name}_from`]}
+          value={
+            !props.date
+              ? values[`${props.name}_from`]
+              : values[`${props.name}_from`] &&
+                values[`${props.name}_from`].split('T')[0]
+          }
         />
         <Input
           id={`${props.name}_to`}
@@ -59,7 +68,12 @@ function FormGroupInput(props) {
           placeholder="to"
           onChange={handleChange}
           onBlur={handleBlur}
-          value={values[`${props.name}_to`]}
+          value={
+            !props.date
+              ? values[`${props.name}_to`]
+              : values[`${props.name}_to`] &&
+                values[`${props.name}_to`].split('T')[0]
+          }
         />
       </>
     );
