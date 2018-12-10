@@ -23,44 +23,47 @@ const NavItem = styled(NavLink)`
 `;
 
 function SideNavigation() {
+  const sideRoutes = [
+    {
+      endpoint: '/ski-jumper',
+      label: 'Ski Jumper'
+    },
+    {
+      endpoint: '/coach',
+      label: 'Coach'
+    },
+    {
+      endpoint: '/team',
+      label: 'Team'
+    },
+    {
+      endpoint: '/ski-jumping-hill',
+      label: 'Ski Jumping Hill'
+    },
+    {
+      endpoint: '/tournament',
+      label: 'Tournament'
+    },
+    {
+      endpoint: '/individual_competition',
+      label: 'Individual Competition'
+    },
+    {
+      endpoint: '/team-competition',
+      label: 'Team Competition'
+    }
+  ];
+
   return (
     <Side>
       <ul>
-        <li>
-          <NavItem activeClassName="active" to="/tournament">
-            Tournament
-          </NavItem>
-        </li>
-        <li>
-          <NavItem activeClassName="active" to="/ski-jumping-hill">
-            Ski Jumping Hill
-          </NavItem>
-        </li>
-        <li>
-          <NavItem activeClassName="active" to="/team">
-            Team
-          </NavItem>
-        </li>
-        <li>
-          <NavItem activeClassName="active" to="/ski-jumper">
-            Ski Jumper
-          </NavItem>
-        </li>
-        <li>
-          <NavItem activeClassName="active" to="/coach">
-            Coach
-          </NavItem>
-        </li>
-        <li>
-          <NavItem activeClassName="active" to="/individual-competition">
-            Individual Competition
-          </NavItem>
-        </li>
-        <li>
-          <NavItem activeClassName="active" to="/team-competition">
-            Team Competition
-          </NavItem>
-        </li>
+        {sideRoutes.map(route => (
+          <li key={route.label}>
+            <NavItem activeClassName="active" to={route.endpoint}>
+              {route.label}
+            </NavItem>
+          </li>
+        ))}
       </ul>
     </Side>
   );

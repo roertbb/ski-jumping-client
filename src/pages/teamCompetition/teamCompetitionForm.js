@@ -12,7 +12,7 @@ const TeamCompetitionValidationSchema = Yup.object().shape({
   start_gate: Yup.number()
     .max(99, 'Too Long!')
     .required('Required'),
-  tournament_id: Yup.number().required('Required'),
+  tournament_id: Yup.number(),
   hill_id: Yup.number().required('Required')
 });
 
@@ -38,6 +38,11 @@ const TeamCompetitionForm = ({ hideModifyView, add, patch, modifyValue }) => {
           tournament_id: '',
           hill_id: ''
         };
+
+  // fallback for null in tournament
+  if (initialValues.tournament_id === null) {
+    initialValues.tournament_id = '';
+  }
 
   // draw spinner while loading teams
   return (
@@ -78,7 +83,7 @@ const TeamCompetitionForm = ({ hideModifyView, add, patch, modifyValue }) => {
               <FormGroupInput
                 errorInfo
                 name="start_gate"
-                type="text"
+                type="number"
                 placeholder="competition start gate"
                 label="Start Gate:"
               />

@@ -13,7 +13,7 @@ const IndividualCompetitionValidationSchema = Yup.object().shape({
   start_gate: Yup.number()
     .max(99, 'Too Long!')
     .required('Required'),
-  tournament_id: Yup.number().required('Required'),
+  tournament_id: Yup.number(),
   hill_id: Yup.number().required('Required'),
   qualification_date: Yup.date().required(`Required`)
 });
@@ -46,6 +46,11 @@ const IndividualCompetitionForm = ({
           hill_id: '',
           qualification_date: ''
         };
+
+  // fallback for null in tournament
+  if (initialValues.tournament_id === null) {
+    initialValues.tournament_id = '';
+  }
 
   // draw spinner while loading teams
   return (
@@ -86,7 +91,7 @@ const IndividualCompetitionForm = ({
               <FormGroupInput
                 errorInfo
                 name="start_gate"
-                type="text"
+                type="nuumber"
                 placeholder="competition start gate"
                 label="Start Gate:"
               />

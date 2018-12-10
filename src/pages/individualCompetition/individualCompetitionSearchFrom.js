@@ -64,7 +64,7 @@ function IndividualCompetitionSearchForm({ get }) {
               <FormGroupInput
                 range
                 name="start_gate"
-                type="text"
+                type="number"
                 placeholder="competition start gate"
                 label="Start Gate:"
               />
