@@ -5,13 +5,18 @@ import Table from '../../components/Table';
 import ContentWrapper from '../../components/ContentWrapper';
 import Container from '../../components/Container';
 import Button from '../../components/Button';
-import TeamForm from './TeamForm';
-import TeamSearchForm from './TeamSearchForm';
+// import IndividualCompetitionForm from './individualCompetitionForm';
+// import IndividualCompetitionSearchForm from './individualCompetitionSearchFrom';
 
-function Team() {
-  const [teams, getTeams, addTeams, patchTeams, deleteTeams, message] = useDate(
-    'team'
-  );
+function Placement() {
+  const [
+    placement,
+    getPlacement,
+    addPlacement,
+    patchPlacement,
+    deletePlacement,
+    message
+  ] = useDate('individual-competition', ['ski_jumper_id', 'competition_id']);
 
   const [
     isModifyView,
@@ -24,32 +29,32 @@ function Team() {
     <>
       <ContentWrapper>
         <Container blank>
-          <h1>Team</h1>
+          <h1>Placement</h1>
           <Button color="info" onClick={() => showModifyView(null)}>
-            Add team
+            Add Placement
           </Button>
         </Container>
         {isModifyView ? (
           <Container>
-            <TeamForm
+            {/* <IndividualCompetitionForm
               hideModifyView={hideModifyView}
-              add={addTeams}
-              patch={patchTeams}
+              add={addPlacement}
+              patch={patchPlacement}
               modifyValue={modifyValue}
-            />
+            /> */}
           </Container>
         ) : (
           <>
             <Container>
-              <TeamSearchForm get={getTeams} />
+              {/* <IndividualCompetitionSearchForm get={getPlacement} /> */}
             </Container>
             <Container>
               <Table
-                labels={['Team Name', 'Classification']}
-                values={['team', 'classification']}
-                items={teams}
-                itemsKey={'team_id'}
-                del={deleteTeams}
+                labels={['Date', 'Tournament', 'Hill']}
+                values={['competition_date', 'tournament_id', 'hill_id']}
+                items={placement}
+                itemsKey={'competition_id'}
+                del={deletePlacement}
                 update={showModifyView}
               />
             </Container>
@@ -60,4 +65,4 @@ function Team() {
   );
 }
 
-export default Team;
+export default Placement;

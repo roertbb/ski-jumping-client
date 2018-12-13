@@ -51,7 +51,7 @@ const TeamCompetitionForm = ({ hideModifyView, add, patch, modifyValue }) => {
       enableReinitialize={true}
       onSubmit={async (values, { setSubmitting }) => {
         if (modifyValue === null) await add(values);
-        else await patch(modifyValue.competition_id, values);
+        else await patch({ competition: modifyValue.competition_id }, values);
         setSubmitting(false);
         hideModifyView();
       }}

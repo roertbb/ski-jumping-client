@@ -21,7 +21,7 @@ const TeamForm = ({ hideModifyView, add, patch, modifyValue }) => {
       enableReinitialize={true}
       onSubmit={async (values, { setSubmitting }) => {
         if (modifyValue === null) await add(values);
-        else await patch(modifyValue.team_id, values);
+        else await patch({ team_id: modifyValue.team_id }, values);
         setSubmitting(false);
         hideModifyView();
       }}

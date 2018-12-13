@@ -31,9 +31,21 @@ const useData = function(endpoint, tableId) {
 
   const deleteData = async id => {
     try {
-      const response = await axios.delete(`${endpoint}/${id}`);
+      const queryParams = queryString.stringify(id);
+      const response = await axios.delete(`${endpoint}?${queryParams}`);
       if (response.status === 200) {
-        setData(data.filter(elem => elem[dataId] !== id));
+        // setData(data.filter(elem => elem[dataId] !== id));
+        setData(
+          data.filter(elem => {
+            if (!Array.isArray(dataId)) return elem[dataId] !== id[dataId];
+            else {
+              Object.entries(id).forEach(entry => {
+                if (entry[1] !== elem[entry[0]]) return false;
+              });
+              return true;
+            }
+          })
+        );
         setMessage('success', `successfully deleted tournament`);
       }
     } catch (error) {
@@ -55,11 +67,24 @@ const useData = function(endpoint, tableId) {
 
   const patchData = async (id, params) => {
     try {
-      const response = await axios.patch(`${endpoint}/${id}`, params);
+      const queryParams = queryString.stringify(id);
+      const response = await axios.patch(`${endpoint}?${queryParams}`, params);
+      // const response = await axios.patch(`${endpoint}/${id}`, params);
       if (response.status === 201) {
+        // data.map(elem => (elem[dataId] === id ? response.data.updated : elem))
         setData(
-          data.map(elem => (elem[dataId] === id ? response.data.updated : elem))
+          data.map(elem => {
+            if (Array.isArray(dataId))
+              return elem[dataId] === id ? response.data.updated : elem;
+            else {
+              Object.entries(id).forEach(entry => {
+                if (entry[1] !== elem[entry[0]]) return elem;
+              });
+              return response.data.updated;
+            }
+          })
         );
+
         setMessage('success', `successfully updated tournament`);
       }
     } catch (error) {

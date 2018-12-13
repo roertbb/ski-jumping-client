@@ -73,7 +73,7 @@ function TableWrapper({ info, labels, values, items, itemsKey, del, update }) {
                     </span>
                   </Button>
                   <Button
-                    onClick={() => del(item[itemsKey])}
+                    onClick={() => del(getIds(itemsKey, item))}
                     color="danger"
                     type="button"
                   >
@@ -90,5 +90,19 @@ function TableWrapper({ info, labels, values, items, itemsKey, del, update }) {
     </>
   );
 }
+
+const getIds = (id, item) => {
+  if (!Array.isArray(id)) {
+    return {
+      [id]: item[id]
+    };
+  } else {
+    const constraints = {};
+    id.forEach(i => {
+      constraints[i] = item[i];
+    });
+    return constraints;
+  }
+};
 
 export default TableWrapper;

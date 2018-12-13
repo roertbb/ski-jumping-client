@@ -45,12 +45,16 @@ function SideNavigation() {
       label: 'Tournament'
     },
     {
-      endpoint: '/individual_competition',
+      endpoint: '/individual-competition',
       label: 'Individual Competition'
     },
     {
       endpoint: '/team-competition',
       label: 'Team Competition'
+    },
+    {
+      endpoint: '/placement',
+      label: 'Placement'
     }
   ];
 

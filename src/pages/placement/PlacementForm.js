@@ -7,46 +7,33 @@ import Button from '../../components/Button';
 import FormContext from '../../context/FormContext';
 import FormGroupInput from '../../components/FormGroupInput';
 
-const SkiJumperValidationSchema = Yup.object().shape({
-  first_name: Yup.string()
-    .max(30, 'Too Long!')
-    .required(`Required`),
-  surname: Yup.string()
-    .max(30, 'Too Long!')
-    .required(`Required`),
-  birth_date: Yup.date().required(`Required`),
-  team_id: Yup.number().required(`Required`),
-  fis_id: Yup.number()
-    .max(99999, 'Too Long!')
-    .required('Required'),
-  active: Yup.string().required('Required'),
-  height: Yup.number()
-    .max(999, 'Too Long!')
-    .required('Required'),
-  weight: Yup.number()
-    .max(99, 'Too Long!')
-    .required('Required')
+const PlacementValidationSchema = Yup.object().shape({
+  ski_jumper_id: Yup.number().required(`Required`),
+  competition_id: Yup.number().required(`Required`)
 });
 
-const SkiJumperForm = ({ hideModifyView, add, patch, modifyValue }) => {
-  const [teams] = useDate('team');
-  const parsedTeam = teams.reduce((prev, team) => {
-    prev[team.team_id] = team.team;
+const PlacementForm = ({ hideModifyView, add, patch, modifyValue }) => {
+  const [skiJumpers] = useDate('ski-jumper');
+  const parsedSkiJumper = skiJumpers.reduce((prev, skiJumper) => {
+    prev[skiJumper.person_id] = `${skiJumper.first_name} ${skiJumper.surname}`;
     return prev;
   }, {});
+
+  const [individualCompetition] = useDate('individual-competition');
+  const parsedIndividualCompetition = individualCompetition.reduce(
+    (prev, competition) => {
+      prev[competition.competition_id] = `#${competition.competition_id}`;
+      return prev;
+    },
+    {}
+  );
 
   const initialValues =
     modifyValue !== null
       ? modifyValue
       : {
-          first_name: '',
-          surname: '',
-          birth_date: '',
-          team_id: '',
-          fis_id: '',
-          active: '',
-          height: '',
-          weight: ''
+          ski_jumper_id: '',
+          competition_id: ''
         };
 
   // draw spinner while loading teams
@@ -56,11 +43,18 @@ const SkiJumperForm = ({ hideModifyView, add, patch, modifyValue }) => {
       enableReinitialize={true}
       onSubmit={async (values, { setSubmitting }) => {
         if (modifyValue === null) await add(values);
-        else await patch({ person_id: modifyValue.person_id }, values);
+        else
+          await patch(
+            {
+              ski_jumper_id: modifyValue.ski_jumper_id,
+              competition_id: modifyValue.competition_id
+            },
+            values
+          );
         setSubmitting(false);
         hideModifyView();
       }}
-      validationSchema={SkiJumperValidationSchema}
+      validationSchema={PlacementValidationSchema}
     >
       {({
         isSubmitting,
@@ -162,4 +156,4 @@ const SkiJumperForm = ({ hideModifyView, add, patch, modifyValue }) => {
   );
 };
 
-export default SkiJumperForm;
+export default PlacementForm;

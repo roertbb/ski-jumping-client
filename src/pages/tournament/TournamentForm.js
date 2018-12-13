@@ -25,7 +25,7 @@ const TournamentForm = ({ hideModifyView, add, patch, modifyValue }) => {
       enableReinitialize={true}
       onSubmit={async (values, { setSubmitting }) => {
         if (modifyValue === null) await add(values);
-        else await patch(modifyValue.tournament_id, values);
+        else await patch({ tournament_id: modifyValue.tournament_id }, values);
         setSubmitting(false);
         hideModifyView();
       }}

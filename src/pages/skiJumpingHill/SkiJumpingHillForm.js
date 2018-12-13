@@ -37,7 +37,11 @@ const SkiJumpingHillForm = ({ hideModifyView, add, patch, modifyValue }) => {
       enableReinitialize={true}
       onSubmit={async (values, { setSubmitting }) => {
         if (modifyValue === null) await add(values);
-        else await patch(modifyValue.ski_jumping_hill_id, values);
+        else
+          await patch(
+            { ski_jumping_hill_id: modifyValue.ski_jumping_hill_id },
+            values
+          );
         setSubmitting(false);
         hideModifyView();
       }}

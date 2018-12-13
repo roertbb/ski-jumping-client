@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import * as serviceWorker from './serviceWorker';
-// import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import Tournament from './pages/tournament/TournamentPage';
 import { ThemeProvider } from 'styled-components';
@@ -15,6 +14,7 @@ import SkiJumper from './pages/skiJumper/SkiJumperPage';
 import Coach from './pages/coach/CoachPage';
 import IndividualCompetition from './pages/individualCompetition/individualCompetitionPage';
 import TeamCompetition from './pages/teamCompetition/teamCompetitionPage';
+import Placement from './pages/placement/PlacementPage';
 
 const App = function() {
   return (
@@ -31,6 +31,7 @@ const App = function() {
               <Route path="/team" component={Team} />
               <Route path="/ski-jumper" component={SkiJumper} />
               <Route path="/coach" component={Coach} />
+              <Route path="/placement" component={Placement} />
               <Route
                 path="/individual-competition"
                 component={IndividualCompetition}
