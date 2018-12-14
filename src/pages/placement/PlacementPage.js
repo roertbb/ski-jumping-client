@@ -1,66 +1,196 @@
-import React from 'react';
-import useDate from '../../hooks/useData';
-import useModal from '../../hooks/useModal';
-import Table from '../../components/Table';
+import React, { useState } from 'react';
+import useData from '../../hooks/useData';
 import ContentWrapper from '../../components/ContentWrapper';
 import Container from '../../components/Container';
 import Button from '../../components/Button';
-// import IndividualCompetitionForm from './individualCompetitionForm';
-// import IndividualCompetitionSearchForm from './individualCompetitionSearchFrom';
+import { Formik, Form } from 'formik';
+import FormGroupInput from '../../components/FormGroupInput';
+import Row from '../../components/Row';
+import FormContext from '../../context/FormContext';
+import AddPlacement from './AddPlacement';
+import { Table } from '../../components/Table';
+import PlacementDetails from './PlacementDetails';
+import SeriesResultForm from './SeriesResultForm';
 
 function Placement() {
   const [
-    placement,
+    placements,
     getPlacement,
     addPlacement,
-    patchPlacement,
     deletePlacement,
     message
-  ] = useDate('individual-competition', ['ski_jumper_id', 'competition_id']);
+  ] = useData('placement', ['ski_jumper_id', 'competition_id']);
 
-  const [
-    isModifyView,
-    modifyValue,
-    showModifyView,
-    hideModifyView
-  ] = useModal();
+  const [competitions] = useData('competition');
+  const parsedCompetitions = competitions.reduce((prev, competition) => {
+    prev[competition.competition_id] = `${competition.name} (${
+      competition.competition_date
+    })`;
+    return prev;
+  }, {});
 
-  return (
-    <>
-      <ContentWrapper>
+  const [competitionData, setCompetitionData] = useState('');
+  const [personData, setPersonData] = useState('');
+  const [seriesData, setSeriesData] = useState('');
+  const [view, setView] = useState('placement');
+
+  let renderedView = '';
+  if (view === 'placement') {
+    renderedView = (
+      <>
         <Container blank>
           <h1>Placement</h1>
-          <Button color="info" onClick={() => showModifyView(null)}>
-            Add Placement
+          <Button
+            color={competitionData !== '' ? 'info' : 'disabled'}
+            onClick={() => competitionData !== '' && setView('add_placement')}
+          >
+            Add Ski Jumper to Competition
           </Button>
         </Container>
-        {isModifyView ? (
-          <Container>
-            {/* <IndividualCompetitionForm
-              hideModifyView={hideModifyView}
-              add={addPlacement}
-              patch={patchPlacement}
-              modifyValue={modifyValue}
-            /> */}
-          </Container>
-        ) : (
-          <>
-            <Container>
-              {/* <IndividualCompetitionSearchForm get={getPlacement} /> */}
-            </Container>
-            <Container>
-              <Table
-                labels={['Date', 'Tournament', 'Hill']}
-                values={['competition_date', 'tournament_id', 'hill_id']}
-                items={placement}
-                itemsKey={'competition_id'}
-                del={deletePlacement}
-                update={showModifyView}
-              />
-            </Container>
-          </>
-        )}
-      </ContentWrapper>
+        <Container>
+          <Formik
+            initialValues={{ competition_id: competitionData }}
+            enableReinitialize={true}
+            validate={async values => {
+              await getPlacement(values);
+              await setCompetitionData(Number(values.competition_id));
+            }}
+            validateOnBlur={false}
+          >
+            {({
+              isSubmitting,
+              errors,
+              touched,
+              handleBlur,
+              handleChange,
+              values
+            }) => (
+              <FormContext.Provider
+                value={{
+                  handleBlur,
+                  handleChange,
+                  values,
+                  errors,
+                  touched
+                }}
+              >
+                <Form>
+                  <Row>
+                    <FormGroupInput
+                      name="competition_id"
+                      placeholder="competition (date)"
+                      label="Choose Competition:"
+                      options={parsedCompetitions}
+                    />
+                  </Row>
+                </Form>
+              </FormContext.Provider>
+            )}
+          </Formik>
+        </Container>
+        {/* render team results if team competition */}
+        <Container>
+          {competitionData === '' ? (
+            <p>choose competition from above</p>
+          ) : placements.length === 0 ? (
+            <p>
+              Couldn't find any ski jumper taking part in that competition, add
+              one by button above 😉
+            </p>
+          ) : (
+            <Table>
+              <thead>
+                <tr>
+                  <th>Place</th>
+                  <th>Ski Jumper</th>
+                  <th>Points</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {placements.map(
+                  ({
+                    person_id,
+                    competition_id,
+                    place,
+                    first_name,
+                    surname,
+                    points
+                  }) => (
+                    <tr key={person_id}>
+                      <td>{place}</td>
+                      <td>
+                        <p>{`${first_name} ${surname}`}</p>
+                      </td>
+                      <td>{points}</td>
+                      <td>
+                        <Button
+                          color="info"
+                          type="button"
+                          onClick={async () => {
+                            await setPersonData(person_id);
+                            await setView('placement_details');
+                          }}
+                        >
+                          <span role="img" aria-label="info">
+                            🔍
+                          </span>
+                        </Button>
+                        <Button
+                          onClick={() =>
+                            deletePlacement({
+                              competition_id,
+                              person_id
+                            })
+                          }
+                          color="danger"
+                          type="button"
+                        >
+                          <span role="img" aria-label="delete">
+                            ❌
+                          </span>
+                        </Button>
+                      </td>
+                    </tr>
+                  )
+                )}
+              </tbody>
+            </Table>
+          )}
+        </Container>
+      </>
+    );
+  } else if (view === 'add_placement') {
+    renderedView = (
+      <AddPlacement
+        competitionId={competitionData}
+        addPlacement={addPlacement}
+        placements={placements}
+        setView={setView}
+      />
+    );
+  } else if (view === 'placement_details') {
+    renderedView = (
+      <PlacementDetails
+        competitionId={competitionData}
+        personId={personData}
+        setView={setView}
+        setSeriesData={setSeriesData}
+      />
+    );
+  } else if (view === 'edit_series') {
+    renderedView = (
+      <SeriesResultForm
+        competitionId={competitionData}
+        personId={personData}
+        seriesId={seriesData}
+        setView={setView}
+      />
+    );
+  }
+  return (
+    <>
+      <ContentWrapper>{renderedView}</ContentWrapper>
     </>
   );
 }

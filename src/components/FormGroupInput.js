@@ -17,11 +17,7 @@ function FormGroupInput(props) {
       id={props.name}
       onChange={handleChange}
       onBlur={handleBlur}
-      value={
-        !props.date
-          ? values[props.name]
-          : values[props.name] && values[props.name].split('T')[0]
-      }
+      value={values[props.name]}
       invalid={!!props.errorInfo && errors[props.name] && touched[props.name]}
       placeholder={props.placeholder}
     />

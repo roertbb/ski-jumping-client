@@ -6,6 +6,7 @@ const propToColor = (theme, color, hover) => {
   else if (color === 'danger') return col.red;
   else if (color === 'info') return col.blue;
   else if (color === 'edit') return col.yellow;
+  else if (color === 'disabled') return col.gray;
 };
 
 const Button = styled.button`

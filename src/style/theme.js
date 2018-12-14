@@ -13,7 +13,8 @@ const theme = {
       green: '#8Cb666',
       red: '#E0353D',
       blue: '#3C74EF',
-      yellow: '#EFB12F'
+      yellow: '#EFB12F',
+      gray: '#DEE1F0'
     }
   },
   font: {

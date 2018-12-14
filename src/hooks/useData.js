@@ -34,15 +34,13 @@ const useData = function(endpoint, tableId) {
       const queryParams = queryString.stringify(id);
       const response = await axios.delete(`${endpoint}?${queryParams}`);
       if (response.status === 200) {
-        // setData(data.filter(elem => elem[dataId] !== id));
         setData(
           data.filter(elem => {
             if (!Array.isArray(dataId)) return elem[dataId] !== id[dataId];
             else {
-              Object.entries(id).forEach(entry => {
-                if (entry[1] !== elem[entry[0]]) return false;
-              });
-              return true;
+              return Object.entries(id).filter(
+                ([key, val]) => val !== elem[key]
+              ).length;
             }
           })
         );
@@ -69,18 +67,17 @@ const useData = function(endpoint, tableId) {
     try {
       const queryParams = queryString.stringify(id);
       const response = await axios.patch(`${endpoint}?${queryParams}`, params);
-      // const response = await axios.patch(`${endpoint}/${id}`, params);
       if (response.status === 201) {
-        // data.map(elem => (elem[dataId] === id ? response.data.updated : elem))
         setData(
           data.map(elem => {
             if (Array.isArray(dataId))
               return elem[dataId] === id ? response.data.updated : elem;
             else {
-              Object.entries(id).forEach(entry => {
-                if (entry[1] !== elem[entry[0]]) return elem;
-              });
-              return response.data.updated;
+              return Object.entries(id).filter(
+                ([key, val]) => val !== elem[key]
+              ).length
+                ? response.data.updated
+                : elem;
             }
           })
         );
