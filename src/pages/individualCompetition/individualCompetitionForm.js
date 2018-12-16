@@ -14,7 +14,7 @@ const IndividualCompetitionValidationSchema = Yup.object().shape({
     .max(99, 'Too Long!')
     .required('Required'),
   tournament_id: Yup.number(),
-  hill_id: Yup.number().required('Required'),
+  ski_jumping_hill_id: Yup.number().required('Required'),
   qualification_date: Yup.date().required(`Required`)
 });
 
@@ -43,7 +43,7 @@ const IndividualCompetitionForm = ({
           competition_date: '',
           start_gate: '',
           tournament_id: '',
-          hill_id: '',
+          ski_jumping_hill_id: '',
           qualification_date: ''
         };
 
@@ -104,7 +104,7 @@ const IndividualCompetitionForm = ({
                 options={parsedTournament}
               />
               <FormGroupInput
-                name="hill_id"
+                name="ski_jumping_hill_id"
                 placeholder="ski jumping hill"
                 label="Ski Jumping Hill:"
                 options={parsedHills}

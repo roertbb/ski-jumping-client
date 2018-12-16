@@ -3,9 +3,10 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 
 const Side = styled.div`
-  flex-basis: 350px;
+  width: 250px;
   background-color: ${({ theme }) => theme.color.white};
   height: 100vh;
+  position: fixed;
 
   ul {
     list-style: none;

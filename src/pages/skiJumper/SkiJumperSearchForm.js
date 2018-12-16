@@ -5,6 +5,7 @@ import Row from '../../components/Row';
 import Button from '../../components/Button';
 import FormGroupInput from '../../components/FormGroupInput';
 import FormContext from '../../context/FormContext';
+import FormGroup from '../../components/FormGroup';
 
 function SkiJumperSearchForm({ get }) {
   const [teams] = useDate('team');
@@ -24,7 +25,9 @@ function SkiJumperSearchForm({ get }) {
     height_from: '',
     height_to: '',
     weight_from: '',
-    weight_to: ''
+    weight_to: '',
+    classification_from: '',
+    classification_to: ''
   };
 
   const clearFilters = async resetForm => {
@@ -109,6 +112,15 @@ function SkiJumperSearchForm({ get }) {
                 name="weight"
                 label="Weight:"
               />
+            </Row>
+            <Row>
+              <FormGroupInput
+                range
+                type="number"
+                name="classification"
+                label="Classification:"
+              />
+              <FormGroup />
             </Row>
             <Row>
               <Button color="info" type="submit" disabled={isSubmitting}>

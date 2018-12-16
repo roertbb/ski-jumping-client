@@ -2,7 +2,6 @@ import styled from 'styled-components';
 
 const Header = styled.header`
   box-sizing: border-box;
-  width: 100vw;
   background-color: ${({ theme }) => theme.color.white};
   box-shadow: ${({ theme }) => theme.shadow};
   position: relative;

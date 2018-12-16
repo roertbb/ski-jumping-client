@@ -18,7 +18,8 @@ export const Table = styled.table`
 
   td:last-child,
   th:last-child {
-    width: ${({ info }) => (info ? '220px' : '150px')};
+    width: ${({ info, single }) =>
+      info ? '220px' : single ? '80px' : '150px'};
   }
 `;
 

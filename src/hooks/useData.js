@@ -3,7 +3,7 @@ import queryString from 'query-string';
 import axios from '../axios';
 import useMessage from './useMessage';
 
-const useData = function(endpoint, tableId) {
+const useData = function(endpoint, tableId, sort = false) {
   const dataId = tableId ? tableId : `${endpoint}_id`.replace('-', '_');
 
   const [data, setData] = useState([]);
@@ -20,7 +20,15 @@ const useData = function(endpoint, tableId) {
       const url = params === null ? endpoint : `${endpoint}?${queryParams}`;
       const response = await axios.get(url);
       if (response.status === 200) {
-        setData(response.data.results);
+        if (!sort) setData(response.data.results);
+        else
+          setData(
+            response.data.results.sort((a, b) => {
+              const aval = a[sort] === null ? 999999 : a[sort];
+              const bval = b[sort] === null ? 999999 : b[sort];
+              return aval < bval ? -1 : bval < aval ? 1 : 0;
+            })
+          );
       } else {
         setMessage('danger', `error fetching tournaments`);
       }

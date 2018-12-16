@@ -13,7 +13,7 @@ const TeamCompetitionValidationSchema = Yup.object().shape({
     .max(99, 'Too Long!')
     .required('Required'),
   tournament_id: Yup.number(),
-  hill_id: Yup.number().required('Required')
+  ski_jumping_hill_id: Yup.number().required('Required')
 });
 
 const TeamCompetitionForm = ({ hideModifyView, add, patch, modifyValue }) => {
@@ -36,7 +36,7 @@ const TeamCompetitionForm = ({ hideModifyView, add, patch, modifyValue }) => {
           competition_date: '',
           start_gate: '',
           tournament_id: '',
-          hill_id: ''
+          ski_jumping_hill_id: ''
         };
 
   // fallback for null in tournament
@@ -96,7 +96,7 @@ const TeamCompetitionForm = ({ hideModifyView, add, patch, modifyValue }) => {
                 options={parsedTournament}
               />
               <FormGroupInput
-                name="hill_id"
+                name="ski_jumping_hill_id"
                 placeholder="ski jumping hill"
                 label="Ski Jumping Hill:"
                 options={parsedHills}

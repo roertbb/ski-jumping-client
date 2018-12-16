@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import useData from '../../hooks/useData';
 import ContentWrapper from '../../components/ContentWrapper';
 import Container from '../../components/Container';
@@ -17,9 +17,10 @@ function Placement() {
     placements,
     getPlacement,
     addPlacement,
+    _,
     deletePlacement,
     message
-  ] = useData('placement', ['ski_jumper_id', 'competition_id']);
+  ] = useData('placement', ['ski_jumper_id', 'competition_id'], 'place');
 
   const [competitions] = useData('competition');
   const parsedCompetitions = competitions.reduce((prev, competition) => {
@@ -33,6 +34,17 @@ function Placement() {
   const [personData, setPersonData] = useState('');
   const [seriesData, setSeriesData] = useState('');
   const [view, setView] = useState('placement');
+
+  const refetchPlacements = async () => {
+    await getPlacement({ competition_id: competitionData });
+  };
+
+  useEffect(
+    () => {
+      refetchPlacements();
+    },
+    [view === 'placement']
+  );
 
   let renderedView = '';
   if (view === 'placement') {
@@ -98,7 +110,7 @@ function Placement() {
               one by button above 😉
             </p>
           ) : (
-            <Table>
+            <Table single>
               <thead>
                 <tr>
                   <th>Place</th>
@@ -136,7 +148,7 @@ function Placement() {
                             🔍
                           </span>
                         </Button>
-                        <Button
+                        {/* <Button
                           onClick={() =>
                             deletePlacement({
                               competition_id,
@@ -149,7 +161,7 @@ function Placement() {
                           <span role="img" aria-label="delete">
                             ❌
                           </span>
-                        </Button>
+                        </Button> */}
                       </td>
                     </tr>
                   )

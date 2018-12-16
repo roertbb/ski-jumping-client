@@ -99,7 +99,7 @@ const SeriesResultForm = ({
                   name="state"
                   placeholder="result type"
                   label="State:"
-                  options={{ n: 'normal', b: 'big', m: 'mammoth' }}
+                  options={{ DNS: 'DNS', DNQ: 'DNQ', DSQ: 'DSQ', Q: 'Q' }}
                 />
                 <FormGroupInput
                   errorInfo

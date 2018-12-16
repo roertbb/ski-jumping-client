@@ -51,7 +51,11 @@ function TeamCompetition() {
             <Container>
               <Table
                 labels={['Date', 'Tournament', 'Hill']}
-                values={['competition_date', 'tournament_id', 'hill_id']}
+                values={[
+                  'competition_date',
+                  'tournament_id',
+                  'ski_jumping_hill_id'
+                ]}
                 items={teamCompetitions}
                 itemsKey={'competition_id'}
                 del={deleteTeamComp}
