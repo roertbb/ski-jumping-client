@@ -11,6 +11,7 @@ import AddPlacement from './AddPlacement';
 import { Table } from '../../components/Table';
 import PlacementDetails from './PlacementDetails';
 import SeriesResultForm from './SeriesResultForm';
+import axios from '../../axios';
 
 function Placement() {
   const [
@@ -39,6 +40,13 @@ function Placement() {
     await getPlacement({ competition_id: competitionData });
   };
 
+  const finishCompetition = async () => {
+    const resp = await axios.post(
+      `/competition/finish-competition?competition_id=${competitionData}`
+    );
+    console.log(resp);
+  };
+
   useEffect(
     () => {
       refetchPlacements();
@@ -64,8 +72,8 @@ function Placement() {
             initialValues={{ competition_id: competitionData }}
             enableReinitialize={true}
             validate={async values => {
-              await getPlacement(values);
               await setCompetitionData(Number(values.competition_id));
+              await getPlacement({ competition_id: values.competition_id });
             }}
             validateOnBlur={false}
           >
@@ -94,6 +102,17 @@ function Placement() {
                       label="Choose Competition:"
                       options={parsedCompetitions}
                     />
+                  </Row>
+                  <Row>
+                    <Button
+                      color={competitionData !== '' ? 'info' : 'disabled'}
+                      type="button"
+                      onClick={() =>
+                        competitionData !== '' && finishCompetition()
+                      }
+                    >
+                      Finish Competition
+                    </Button>
                   </Row>
                 </Form>
               </FormContext.Provider>
