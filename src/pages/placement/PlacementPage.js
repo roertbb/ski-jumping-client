@@ -72,6 +72,7 @@ function Placement() {
             initialValues={{ competition_id: competitionData }}
             enableReinitialize={true}
             validate={async values => {
+              console.log(values);
               await setCompetitionData(Number(values.competition_id));
               await getPlacement({ competition_id: values.competition_id });
             }}
