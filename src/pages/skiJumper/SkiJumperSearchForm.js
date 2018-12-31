@@ -5,14 +5,15 @@ import Row from '../../components/Row';
 import Button from '../../components/Button';
 import FormGroupInput from '../../components/FormGroupInput';
 import FormContext from '../../context/FormContext';
-import FormGroup from '../../components/FormGroup';
 
 function SkiJumperSearchForm({ get }) {
   const [teams] = useDate('team');
-  const parsedTeam = teams.reduce((prev, team) => {
-    prev[team.team_id] = team.team;
-    return prev;
-  }, {});
+  const parsedTeam =
+    teams &&
+    teams.reduce((prev, team) => {
+      prev[team.team_id] = team.team;
+      return prev;
+    }, {});
 
   const initialValues = {
     first_name: '',
@@ -27,7 +28,9 @@ function SkiJumperSearchForm({ get }) {
     weight_from: '',
     weight_to: '',
     classification_from: '',
-    classification_to: ''
+    classification_to: '',
+    classification_points_from: '',
+    classification_points_to: ''
   };
 
   const clearFilters = async resetForm => {
@@ -56,8 +59,8 @@ function SkiJumperSearchForm({ get }) {
               <FormGroupInput
                 name="first_name"
                 type="text"
-                placeholder="ski jumper first name"
-                label="Firstname:"
+                placeholder="ski jumper name"
+                label="Name:"
               />
               <FormGroupInput
                 name="surname"
@@ -120,7 +123,12 @@ function SkiJumperSearchForm({ get }) {
                 name="classification"
                 label="Classification:"
               />
-              <FormGroup />
+              <FormGroupInput
+                range
+                type="number"
+                name="classification_points"
+                label="Classification Points:"
+              />
             </Row>
             <Row>
               <Button color="info" type="submit" disabled={isSubmitting}>

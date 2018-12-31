@@ -1,4 +1,5 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom';
 import useDate from '../../hooks/useData';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
@@ -28,12 +29,20 @@ const SkiJumperValidationSchema = Yup.object().shape({
     .required('Required')
 });
 
-const SkiJumperForm = ({ hideModifyView, add, patch, modifyValue }) => {
+const SkiJumperForm = ({
+  hideModifyView,
+  add,
+  patch,
+  modifyValue,
+  history
+}) => {
   const [teams] = useDate('team');
-  const parsedTeam = teams.reduce((prev, team) => {
-    prev[team.team_id] = team.team;
-    return prev;
-  }, {});
+  const parsedTeam =
+    teams &&
+    teams.reduce((prev, team) => {
+      prev[team.team_id] = team.team;
+      return prev;
+    }, {});
 
   const initialValues =
     modifyValue !== null
@@ -55,10 +64,11 @@ const SkiJumperForm = ({ hideModifyView, add, patch, modifyValue }) => {
       initialValues={initialValues}
       enableReinitialize={true}
       onSubmit={async (values, { setSubmitting }) => {
-        if (modifyValue === null) await add(values);
-        else await patch({ person_id: modifyValue.person_id }, values);
+        let status;
+        if (modifyValue === null) status = await add(values);
+        else status = await patch({ person_id: modifyValue.person_id }, values);
         setSubmitting(false);
-        hideModifyView();
+        if (status) history.push('/ski-jumper');
       }}
       validationSchema={SkiJumperValidationSchema}
     >
@@ -148,7 +158,7 @@ const SkiJumperForm = ({ hideModifyView, add, patch, modifyValue }) => {
                 Submit
               </Button>
               <Button
-                onClick={() => hideModifyView()}
+                onClick={() => history.goBack()}
                 color="info"
                 type="button"
               >
@@ -162,4 +172,4 @@ const SkiJumperForm = ({ hideModifyView, add, patch, modifyValue }) => {
   );
 };
 
-export default SkiJumperForm;
+export default withRouter(SkiJumperForm);

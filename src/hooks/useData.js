@@ -6,9 +6,7 @@ import useMessage from './useMessage';
 const useData = function(endpoint, tableId, sort = false) {
   const dataId = tableId ? tableId : `${endpoint}_id`.replace('-', '_');
 
-  const [data, setData] = useState([]);
-
-  const [choosenItem, setChoosenItem] = useState(null);
+  const [data, setData] = useState(null);
 
   useEffect(() => {
     getData();
@@ -65,9 +63,11 @@ const useData = function(endpoint, tableId, sort = false) {
       if (response.status === 200) {
         setData([...data, response.data.created]);
         setMessage('success', `successfully created tournament`);
+        return true;
       }
     } catch (error) {
       setMessage('danger', `error creating tournaments`);
+      return false;
     }
   };
 
@@ -82,33 +82,25 @@ const useData = function(endpoint, tableId, sort = false) {
               return elem[dataId] === id ? response.data.updated : elem;
             else {
               return Object.entries(id).filter(
-                ([key, val]) => val !== elem[key]
+                ([key, val]) => val === elem[key]
               ).length
                 ? response.data.updated
                 : elem;
             }
           })
         );
-
         setMessage('success', `successfully updated tournament`);
+        return true;
       }
     } catch (error) {
       setMessage('danger', `error updating tournaments`);
+      return false;
     }
   };
 
   const [message, setMessage] = useMessage();
 
-  return [
-    data,
-    getData,
-    addData,
-    patchData,
-    deleteData,
-    message,
-    choosenItem,
-    setChoosenItem
-  ];
+  return [data, getData, addData, patchData, deleteData, message];
 };
 
 export default useData;

@@ -1,8 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
 import Button from './Button';
+import Spinner from './Spiner';
+import { withRouter } from 'react-router-dom';
 
 export const Table = styled.table`
+  & + * {
+    margin-top: ${({ theme }) => theme.spacing.l};
+  }
+
   width: 100%;
   border-collapse: collapse;
 
@@ -23,11 +29,23 @@ export const Table = styled.table`
   }
 `;
 
-function TableWrapper({ info, labels, values, items, itemsKey, del, update }) {
+function TableWrapper({
+  info,
+  route,
+  labels,
+  values,
+  items,
+  itemsKey,
+  del,
+  update,
+  history
+}) {
   return (
     <>
       <h3>Search results</h3>
-      {items.length === 0 ? (
+      {!items ? (
+        <Spinner />
+      ) : items.length === 0 ? (
         <p>
           Couldn't found results with such parameters{' '}
           <span role="img" aria-label="thinking">
@@ -57,7 +75,9 @@ function TableWrapper({ info, labels, values, items, itemsKey, del, update }) {
                     <Button
                       color="info"
                       type="button"
-                      onClick={() => info(item)}
+                      onClick={() =>
+                        history.push(`/${route}/${item[itemsKey]}`)
+                      }
                     >
                       <span role="img" aria-label="info">
                         🔍
@@ -106,4 +126,4 @@ const getIds = (id, item) => {
   }
 };
 
-export default TableWrapper;
+export default withRouter(TableWrapper);

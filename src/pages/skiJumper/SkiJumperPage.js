@@ -1,94 +1,88 @@
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
+import { Switch, Route, withRouter } from 'react-router-dom';
 import useDate from '../../hooks/useData';
-import useModal from '../../hooks/useModal';
 import Table from '../../components/Table';
 import ContentWrapper from '../../components/ContentWrapper';
 import Container from '../../components/Container';
 import Button from '../../components/Button';
 import SkiJumperForm from './SkiJumperForm';
 import SkiJumperSearchForm from './SkiJumperSearchForm';
-import axios from '../../axios';
+import SkiJumperDetails from './SkiJumperDetails';
 
-function SkiJumper() {
+function SkiJumper(props) {
   const [
     skiJumpers,
     getSkiJumpers,
     addSkiJumpers,
     patchSkiJumpers,
     deleteSkiJumpers,
-    message,
-    choosenSkiJumper,
-    setChoosenSkiJumper
+    message
   ] = useDate('ski-jumper', 'person_id');
 
-  const [
-    isModifyView,
-    modifyValue,
-    showModifyView,
-    hideModifyView
-  ] = useModal();
+  const [modElem, setModElem] = useState(null);
 
-  const getBMI = async person_id => {
-    const resp = await axios.get(`/ski-jumper/get-bmi?person_id=${person_id}`);
-    await setChoosenSkiJumper({ ...choosenSkiJumper, bmi: resp.data.bmi });
+  const updateSkiJumper = skiJumper => {
+    setModElem(skiJumper);
+    props.history.push('/ski-jumper/modify');
   };
 
-  useEffect(
-    () => {
-      choosenSkiJumper && getBMI(choosenSkiJumper.person_id);
-    },
-    [choosenSkiJumper && choosenSkiJumper.bmi]
-  );
-
-  let view = (
+  const SearchView = () => (
     <>
       <Container>
         <SkiJumperSearchForm get={getSkiJumpers} />
       </Container>
       <Container>
         <Table
-          info={setChoosenSkiJumper}
+          info
+          route={'ski-jumper'}
           labels={['Firstname', 'Surname']}
           values={['first_name', 'surname']}
           items={skiJumpers}
           itemsKey={'person_id'}
           del={deleteSkiJumpers}
-          update={showModifyView}
+          update={updateSkiJumper}
         />
       </Container>
     </>
   );
-  if (isModifyView) {
-    view = (
-      <Container>
-        <SkiJumperForm
-          hideModifyView={hideModifyView}
-          add={addSkiJumpers}
-          patch={patchSkiJumpers}
-          modifyValue={modifyValue}
-        />
-      </Container>
-    );
-  } else if (choosenSkiJumper) {
-    view = (
-      <>
-        <p>bmi: {choosenSkiJumper.bmi}</p>
-      </>
-    );
-  }
+
+  const modifyView = () => (
+    <Container>
+      <SkiJumperForm
+        add={addSkiJumpers}
+        patch={patchSkiJumpers}
+        modifyValue={modElem}
+      />
+    </Container>
+  );
+
   return (
     <>
       <ContentWrapper>
         <Container blank>
           <h1>Ski Jumper</h1>
-          <Button color="info" onClick={() => showModifyView(null)}>
-            Add Ski Jumper
-          </Button>
+          {props.location.pathname === '/ski-jumper' ? (
+            <Button
+              color="info"
+              onClick={() => props.history.push('/ski-jumper/add')}
+            >
+              Add Ski Jumper
+            </Button>
+          ) : (
+            <Button color="info" onClick={() => props.history.goBack()}>
+              back to Search
+            </Button>
+          )}
         </Container>
-        {view}
+        <Switch>
+          <Route exact path="/ski-jumper" render={SearchView} />
+          <Route path="/ski-jumper/add" render={modifyView} />
+          <Route path="/ski-jumper/modify" render={modifyView} />
+          <Route path="/ski-jumper/:id" render={() => <SkiJumperDetails />} />
+        </Switch>
       </ContentWrapper>
     </>
   );
 }
 
-export default SkiJumper;
+export default withRouter(SkiJumper);
