@@ -1,78 +1,94 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Switch, Route, withRouter } from 'react-router-dom';
 import useData from '../../hooks/useData';
-import useModal from '../../hooks/useModal';
 import ContentWrapper from '../../components/ContentWrapper';
 import Container from '../../components/Container';
 import Button from '../../components/Button';
 import Table from '../../components/Table';
 import SkiJumpingHillForm from './SkiJumpingHillForm';
 import SkiJumpingHillSearchForm from './SkiJumpingHillSearchForm';
+import SkiJumpingHillDetails from './SkiJumpingHillDetails';
 
-import Info from '../../components/Info';
-
-function SkiJumpingHillPage() {
+function SkiJumpingHillPage(props) {
   const [
     skiJumpingHill,
     getSkiJumpingHill,
     addSkiJumpingHill,
     patchSkiJumpingHill,
     deleteSkiJumpingHill,
-    message,
-    choosenHill,
-    setChoosenHill
+    message
   ] = useData('ski-jumping-hill');
 
-  const [
-    isModifyView,
-    modifyValue,
-    showModifyView,
-    hideModifyView
-  ] = useModal();
+  const [modElem, setModElem] = useState(null);
 
-  let view = (
+  const updateSkiJumpingHill = hill => {
+    setModElem(hill);
+    props.history.push('/ski-jumping-hill/modify');
+  };
+
+  const searchView = () => (
     <>
       <Container>
         <SkiJumpingHillSearchForm get={getSkiJumpingHill} />
       </Container>
       <Container>
         <Table
-          info={setChoosenHill}
+          info
+          route={'ski-jumping-hill'}
           labels={['Name', 'Country', 'City']}
           values={['name', 'country', 'city']}
           items={skiJumpingHill}
           itemsKey={'ski_jumping_hill_id'}
           del={deleteSkiJumpingHill}
-          update={showModifyView}
+          update={updateSkiJumpingHill}
         />
       </Container>
     </>
   );
-  if (isModifyView) {
-    view = (
-      <Container>
-        <SkiJumpingHillForm
-          hideModifyView={hideModifyView}
-          add={addSkiJumpingHill}
-          patch={patchSkiJumpingHill}
-          modifyValue={modifyValue}
-        />
-      </Container>
-    );
-  } else if (choosenHill) {
-    view = <Info info={choosenHill} chooseItem={setChoosenHill} />;
-  }
+
+  const modifyView = () => (
+    <Container>
+      <SkiJumpingHillForm
+        add={addSkiJumpingHill}
+        patch={patchSkiJumpingHill}
+        modifyValue={modElem}
+      />
+    </Container>
+  );
 
   return (
-    <ContentWrapper>
-      <Container blank>
-        <h1>Ski Jumping Hill</h1>
-        <Button color="info" onClick={() => showModifyView(null)}>
-          Add Ski Jumping Hill
-        </Button>
-      </Container>
-      {view}
-    </ContentWrapper>
+    <>
+      <ContentWrapper>
+        <Container blank>
+          <h1>Ski Jumping Hill</h1>
+          <Button
+            color="info"
+            onClick={() => {
+              setModElem(null);
+              props.history.push(
+                props.location.pathname === '/ski-jumping-hill'
+                  ? '/ski-jumping-hill/add'
+                  : '/ski-jumping-hill'
+              );
+            }}
+          >
+            {props.location.pathname === '/ski-jumping-hill'
+              ? 'Add Ski Jumping Hill'
+              : 'back to Search'}
+          </Button>
+        </Container>
+        <Switch>
+          <Route exact path="/ski-jumping-hill" render={searchView} />
+          <Route path="/ski-jumping-hill/add" render={modifyView} />
+          <Route path="/ski-jumping-hill/modify" render={modifyView} />
+          <Route
+            path="/ski-jumping-hill/:id"
+            render={() => <SkiJumpingHillDetails />}
+          />
+        </Switch>
+      </ContentWrapper>
+    </>
   );
 }
 
-export default SkiJumpingHillPage;
+export default withRouter(SkiJumpingHillPage);

@@ -42,7 +42,7 @@ const useData = function(endpoint, tableId, sort = false) {
       if (response.status === 200) {
         setData(
           data.filter(elem => {
-            if (!Array.isArray(dataId)) return elem[dataId] !== id[dataId];
+            if (Array.isArray(dataId)) return elem[dataId] !== id[dataId];
             else {
               return Object.entries(id).filter(
                 ([key, val]) => val !== elem[key]

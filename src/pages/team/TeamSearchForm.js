@@ -4,11 +4,15 @@ import Row from '../../components/Row';
 import Button from '../../components/Button';
 import FormGroupInput from '../../components/FormGroupInput';
 import FormContext from '../../context/FormContext';
+import FormGroup from '../../components/FormGroup';
 
 function TeamSearchForm({ get }) {
   const initialValues = {
     team: '',
-    classification: ''
+    classification_from: '',
+    classification_to: '',
+    classification_points_from: '',
+    classification_points_to: ''
   };
 
   const clearFilters = async resetForm => {
@@ -41,11 +45,22 @@ function TeamSearchForm({ get }) {
                 label="Team Name:"
               />
               <FormGroupInput
+                range
                 name="classification"
                 type="text"
                 placeholder="team classification"
                 label="Classification:"
               />
+            </Row>
+            <Row>
+              <FormGroupInput
+                range
+                name="classification_points"
+                type="text"
+                placeholder="team classification points"
+                label="Classification Points:"
+              />
+              <FormGroup />
             </Row>
             <Row>
               <Button color="info" type="submit" disabled={isSubmitting}>

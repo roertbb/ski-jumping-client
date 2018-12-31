@@ -1,4 +1,5 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import Row from '../../components/Row';
@@ -25,7 +26,7 @@ const SkiJumpingHillValidationSchema = Yup.object().shape({
     .required('Required')
 });
 
-const SkiJumpingHillForm = ({ hideModifyView, add, patch, modifyValue }) => {
+const SkiJumpingHillForm = ({ add, patch, modifyValue, history }) => {
   const initialValues =
     modifyValue !== null
       ? modifyValue
@@ -36,14 +37,15 @@ const SkiJumpingHillForm = ({ hideModifyView, add, patch, modifyValue }) => {
       initialValues={initialValues}
       enableReinitialize={true}
       onSubmit={async (values, { setSubmitting }) => {
-        if (modifyValue === null) await add(values);
+        let status;
+        if (modifyValue === null) status = await add(values);
         else
-          await patch(
+          status = await patch(
             { ski_jumping_hill_id: modifyValue.ski_jumping_hill_id },
             values
           );
         setSubmitting(false);
-        hideModifyView();
+        if (status) history.push('/ski-jumping-hill');
       }}
       validationSchema={SkiJumpingHillValidationSchema}
     >
@@ -115,7 +117,7 @@ const SkiJumpingHillForm = ({ hideModifyView, add, patch, modifyValue }) => {
                 Submit
               </Button>
               <Button
-                onClick={() => hideModifyView()}
+                onClick={() => history.push('/ski-jumping-hill')}
                 color="info"
                 type="button"
               >
@@ -129,4 +131,4 @@ const SkiJumpingHillForm = ({ hideModifyView, add, patch, modifyValue }) => {
   );
 };
 
-export default SkiJumpingHillForm;
+export default withRouter(SkiJumpingHillForm);
