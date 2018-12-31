@@ -1,4 +1,5 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import Button from '../../components/Button';
@@ -15,7 +16,7 @@ const TournamentValidationSchema = Yup.object().shape({
     .required('Required')
 });
 
-const TournamentForm = ({ hideModifyView, add, patch, modifyValue }) => {
+const TournamentForm = ({ add, patch, modifyValue, history }) => {
   const initialValues =
     modifyValue !== null ? modifyValue : { name: '', edition: '' };
 
@@ -24,10 +25,15 @@ const TournamentForm = ({ hideModifyView, add, patch, modifyValue }) => {
       initialValues={initialValues}
       enableReinitialize={true}
       onSubmit={async (values, { setSubmitting }) => {
-        if (modifyValue === null) await add(values);
-        else await patch({ tournament_id: modifyValue.tournament_id }, values);
+        let status;
+        if (modifyValue === null) status = await add(values);
+        else
+          status = await patch(
+            { tournament_id: modifyValue.tournament_id },
+            values
+          );
         setSubmitting(false);
-        hideModifyView();
+        if (status) history.push('/tournament');
       }}
       validationSchema={TournamentValidationSchema}
     >
@@ -65,7 +71,7 @@ const TournamentForm = ({ hideModifyView, add, patch, modifyValue }) => {
                 Submit
               </Button>
               <Button
-                onClick={() => hideModifyView()}
+                onClick={() => history.push('/tournament')}
                 color="info"
                 type="button"
               >
@@ -79,4 +85,4 @@ const TournamentForm = ({ hideModifyView, add, patch, modifyValue }) => {
   );
 };
 
-export default TournamentForm;
+export default withRouter(TournamentForm);

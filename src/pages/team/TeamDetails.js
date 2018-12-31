@@ -56,7 +56,7 @@ function TeamDetails({ match }) {
           <Container>
             <h3>{`Ski Jumpers that belongs to ${team.team}`}</h3>
             {team.skiJumpers.length === 0 ? (
-              <p>The team has no ski jumpers</p>
+              <p>Team has no ski jumpers</p>
             ) : (
               <Table single>
                 <thead>
