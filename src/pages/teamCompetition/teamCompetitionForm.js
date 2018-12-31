@@ -18,16 +18,20 @@ const TeamCompetitionValidationSchema = Yup.object().shape({
 
 const TeamCompetitionForm = ({ hideModifyView, add, patch, modifyValue }) => {
   const [tournaments] = useDate('tournament');
-  const parsedTournament = tournaments.reduce((prev, tournament) => {
-    prev[tournament.tournament_id] = tournament.name;
-    return prev;
-  }, {});
+  const parsedTournament =
+    tournaments &&
+    tournaments.reduce((prev, tournament) => {
+      prev[tournament.tournament_id] = tournament.name;
+      return prev;
+    }, {});
 
   const [skiJumpingHills] = useDate('ski-jumping-hill');
-  const parsedHills = skiJumpingHills.reduce((prev, hill) => {
-    prev[hill.ski_jumping_hill_id] = hill.name;
-    return prev;
-  }, {});
+  const parsedHills =
+    skiJumpingHills &&
+    skiJumpingHills.reduce((prev, hill) => {
+      prev[hill.ski_jumping_hill_id] = hill.name;
+      return prev;
+    }, {});
 
   const initialValues =
     modifyValue !== null

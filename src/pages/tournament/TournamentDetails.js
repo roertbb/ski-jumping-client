@@ -23,8 +23,6 @@ function TournamentDetails({ match }) {
     getTournament(match.params.id);
   }, []);
 
-  console.log(tournament);
-
   return (
     <>
       {tournament === null ? (
@@ -74,13 +72,62 @@ function TournamentDetails({ match }) {
                   {tournament.individualCompetitions.map(comp => (
                     <tr key={comp.competition_id}>
                       <td>{comp.competition_date}</td>
-                      <td>{comp.name}</td>
+                      <td>
+                        <Link
+                          to={`/ski-jumping-hill/${comp.ski_jumping_hill_id}`}
+                        >
+                          {comp.name}
+                        </Link>
+                      </td>
                       <td>{comp.city}</td>
                       <td>{comp.country}</td>
                       <td>
                         <Link
                           to={`/individual-competition/${comp.competition_id}`}
                         >
+                          <Button color="info">
+                            <span role="img" aria-label="info">
+                              🔍
+                            </span>
+                          </Button>
+                        </Link>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            )}
+          </Container>
+          <Container>
+            <h3>{`Team Competitions that belongs to ${tournament.name}`}</h3>
+            {tournament.teamCompetitions.length === 0 ? (
+              <p>Tournament has no team competitions</p>
+            ) : (
+              <Table single>
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Ski Jumping Hill</th>
+                    <th>City</th>
+                    <th>Country</th>
+                    <th>Details</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {tournament.teamCompetitions.map(comp => (
+                    <tr key={comp.competition_id}>
+                      <td>{comp.competition_date}</td>
+                      <td>
+                        <Link
+                          to={`/ski-jumping-hill/${comp.ski_jumping_hill_id}`}
+                        >
+                          {comp.name}
+                        </Link>
+                      </td>
+                      <td>{comp.city}</td>
+                      <td>{comp.country}</td>
+                      <td>
+                        <Link to={`/team-competition/${comp.competition_id}`}>
                           <Button color="info">
                             <span role="img" aria-label="info">
                               🔍
