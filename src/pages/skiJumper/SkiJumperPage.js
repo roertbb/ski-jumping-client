@@ -35,8 +35,18 @@ function SkiJumper(props) {
         <Table
           info
           route={'ski-jumper'}
-          labels={['Firstname', 'Surname']}
-          values={['first_name', 'surname']}
+          labels={[
+            'Classification',
+            'Firstname',
+            'Surname',
+            'Classification Points'
+          ]}
+          values={[
+            'classification',
+            'first_name',
+            'surname',
+            'classification_points'
+          ]}
           items={skiJumpers}
           itemsKey={'person_id'}
           del={deleteSkiJumpers}
@@ -61,18 +71,21 @@ function SkiJumper(props) {
       <ContentWrapper>
         <Container blank>
           <h1>Ski Jumper</h1>
-          {props.location.pathname === '/ski-jumper' ? (
-            <Button
-              color="info"
-              onClick={() => props.history.push('/ski-jumper/add')}
-            >
-              Add Ski Jumper
-            </Button>
-          ) : (
-            <Button color="info" onClick={() => props.history.goBack()}>
-              back to Search
-            </Button>
-          )}
+          <Button
+            color="info"
+            onClick={() => {
+              setModElem(null);
+              props.history.push(
+                props.location.pathname === '/ski-jumper'
+                  ? '/ski-jumper/add'
+                  : '/ski-jumper'
+              );
+            }}
+          >
+            {props.location.pathname === '/ski-jumper'
+              ? 'Add Ski Jumper'
+              : 'back to Search'}
+          </Button>
         </Container>
         <Switch>
           <Route exact path="/ski-jumper" render={SearchView} />

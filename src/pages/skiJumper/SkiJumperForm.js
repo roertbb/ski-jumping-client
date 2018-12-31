@@ -7,6 +7,7 @@ import Row from '../../components/Row';
 import Button from '../../components/Button';
 import FormContext from '../../context/FormContext';
 import FormGroupInput from '../../components/FormGroupInput';
+import OverlaySpinner from '../../components/SpinnerOverlay';
 
 const SkiJumperValidationSchema = Yup.object().shape({
   first_name: Yup.string()
@@ -29,13 +30,7 @@ const SkiJumperValidationSchema = Yup.object().shape({
     .required('Required')
 });
 
-const SkiJumperForm = ({
-  hideModifyView,
-  add,
-  patch,
-  modifyValue,
-  history
-}) => {
+const SkiJumperForm = ({ add, patch, modifyValue, history }) => {
   const [teams] = useDate('team');
   const parsedTeam =
     teams &&
@@ -58,7 +53,6 @@ const SkiJumperForm = ({
           weight: ''
         };
 
-  // draw spinner while loading teams
   return (
     <Formik
       initialValues={initialValues}
@@ -84,6 +78,7 @@ const SkiJumperForm = ({
           value={{ handleBlur, handleChange, values, errors, touched }}
         >
           <Form>
+            {!teams && <OverlaySpinner />}
             <h3>{`${modifyValue === null ? 'Create' : 'Edit'} Ski Jumper`}</h3>
             <Row>
               <FormGroupInput
@@ -158,7 +153,7 @@ const SkiJumperForm = ({
                 Submit
               </Button>
               <Button
-                onClick={() => history.goBack()}
+                onClick={() => history.push('/ski-jumper')}
                 color="info"
                 type="button"
               >

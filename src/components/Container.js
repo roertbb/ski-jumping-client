@@ -1,6 +1,7 @@
 import styled, { css } from 'styled-components';
 
 const Container = styled.div`
+  position: relative;
   max-width: 1200px;
   margin: 0 auto ${({ theme }) => theme.spacing.l};
 

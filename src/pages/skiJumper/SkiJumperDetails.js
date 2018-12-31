@@ -6,13 +6,13 @@ import Spinner from '../../components/Spiner';
 import { Table } from '../../components/Table';
 import Link from '../../components/Link';
 
-function SkiJumperDetails({ skiJumpers, match }) {
+function SkiJumperDetails({ match }) {
   const [skiJumper, setSkiJumper] = useState(undefined);
 
   const getSkiJumper = async person_id => {
     try {
-      const resp = await axios.get(`/ski-jumper/${person_id}`);
-      if (resp.status === 200) setSkiJumper(resp.data.skiJumper);
+      const res = await axios.get(`/ski-jumper/${person_id}`);
+      if (res.status === 200) setSkiJumper(res.data.skiJumper);
     } catch (error) {
       setSkiJumper(null);
     }

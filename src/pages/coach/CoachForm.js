@@ -1,4 +1,5 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom';
 import useDate from '../../hooks/useData';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
@@ -7,6 +8,7 @@ import Button from '../../components/Button';
 import FormContext from '../../context/FormContext';
 import FormGroupInput from '../../components/FormGroupInput';
 import FormGroup from '../../components/FormGroup';
+import OverlaySpinner from '../../components/SpinnerOverlay';
 
 const CoachValidationSchema = Yup.object().shape({
   first_name: Yup.string()
@@ -22,12 +24,14 @@ const CoachValidationSchema = Yup.object().shape({
     .required(`Required`)
 });
 
-const CoachForm = ({ hideModifyView, add, patch, modifyValue }) => {
+const CoachForm = ({ add, patch, modifyValue, history }) => {
   const [teams] = useDate('team');
-  const parsedTeam = teams.reduce((prev, team) => {
-    prev[team.team_id] = team.team;
-    return prev;
-  }, {});
+  const parsedTeam =
+    teams &&
+    teams.reduce((prev, team) => {
+      prev[team.team_id] = team.team;
+      return prev;
+    }, {});
 
   const initialValues =
     modifyValue !== null
@@ -40,16 +44,16 @@ const CoachForm = ({ hideModifyView, add, patch, modifyValue }) => {
           nationality: ''
         };
 
-  // draw spinner while loading teams
   return (
     <Formik
       initialValues={initialValues}
       enableReinitialize={true}
       onSubmit={async (values, { setSubmitting }) => {
-        if (modifyValue === null) await add(values);
-        else await patch(modifyValue.person_id, values);
+        let status;
+        if (modifyValue === null) status = await add(values);
+        else status = await patch({ person_id: modifyValue.person_id }, values);
         setSubmitting(false);
-        hideModifyView();
+        if (status) history.push('/coach');
       }}
       validationSchema={CoachValidationSchema}
     >
@@ -65,6 +69,7 @@ const CoachForm = ({ hideModifyView, add, patch, modifyValue }) => {
           value={{ handleBlur, handleChange, values, errors, touched }}
         >
           <Form>
+            {!teams && <OverlaySpinner />}
             <h3>{`${modifyValue === null ? 'Create' : 'Edit'} Coach`}</h3>
             <Row>
               <FormGroupInput
@@ -114,7 +119,7 @@ const CoachForm = ({ hideModifyView, add, patch, modifyValue }) => {
                 Submit
               </Button>
               <Button
-                onClick={() => hideModifyView()}
+                onClick={() => history.push('/coach')}
                 color="info"
                 type="button"
               >
@@ -128,4 +133,4 @@ const CoachForm = ({ hideModifyView, add, patch, modifyValue }) => {
   );
 };
 
-export default CoachForm;
+export default withRouter(CoachForm);

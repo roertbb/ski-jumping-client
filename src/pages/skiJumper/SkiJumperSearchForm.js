@@ -5,6 +5,7 @@ import Row from '../../components/Row';
 import Button from '../../components/Button';
 import FormGroupInput from '../../components/FormGroupInput';
 import FormContext from '../../context/FormContext';
+import OverlaySpinner from '../../components/SpinnerOverlay';
 
 function SkiJumperSearchForm({ get }) {
   const [teams] = useDate('team');
@@ -54,6 +55,7 @@ function SkiJumperSearchForm({ get }) {
       {({ isSubmitting, resetForm, handleBlur, handleChange, values }) => (
         <FormContext.Provider value={{ handleBlur, handleChange, values }}>
           <Form>
+            {!teams && <OverlaySpinner />}
             <h3>Search Ski Jumper</h3>
             <Row>
               <FormGroupInput

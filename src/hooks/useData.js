@@ -81,6 +81,7 @@ const useData = function(endpoint, tableId, sort = false) {
             if (Array.isArray(dataId))
               return elem[dataId] === id ? response.data.updated : elem;
             else {
+              console.log(elem, id);
               return Object.entries(id).filter(
                 ([key, val]) => val === elem[key]
               ).length

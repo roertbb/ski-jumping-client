@@ -6,13 +6,16 @@ import Button from '../../components/Button';
 import FormGroupInput from '../../components/FormGroupInput';
 import FormContext from '../../context/FormContext';
 import FormGroup from '../../components/FormGroup';
+import OverlaySpinner from '../../components/SpinnerOverlay';
 
 function CoachSearchForm({ get }) {
   const [teams] = useDate('team');
-  const parsedTeam = teams.reduce((prev, team) => {
-    prev[team.team_id] = team.team;
-    return prev;
-  }, {});
+  const parsedTeam =
+    teams &&
+    teams.reduce((prev, team) => {
+      prev[team.team_id] = team.team;
+      return prev;
+    }, {});
 
   const initialValues = {
     first_name: '',
@@ -44,6 +47,7 @@ function CoachSearchForm({ get }) {
       {({ isSubmitting, resetForm, handleBlur, handleChange, values }) => (
         <FormContext.Provider value={{ handleBlur, handleChange, values }}>
           <Form>
+            {!teams && <OverlaySpinner />}
             <h3>Search Coach</h3>
             <Row>
               <FormGroupInput
