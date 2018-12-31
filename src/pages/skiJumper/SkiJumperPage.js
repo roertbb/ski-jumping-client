@@ -26,7 +26,7 @@ function SkiJumper(props) {
     props.history.push('/ski-jumper/modify');
   };
 
-  const SearchView = () => (
+  const searchView = () => (
     <>
       <Container>
         <SkiJumperSearchForm get={getSkiJumpers} />
@@ -88,7 +88,7 @@ function SkiJumper(props) {
           </Button>
         </Container>
         <Switch>
-          <Route exact path="/ski-jumper" render={SearchView} />
+          <Route exact path="/ski-jumper" render={searchView} />
           <Route path="/ski-jumper/add" render={modifyView} />
           <Route path="/ski-jumper/modify" render={modifyView} />
           <Route path="/ski-jumper/:id" render={() => <SkiJumperDetails />} />

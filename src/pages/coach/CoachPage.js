@@ -26,7 +26,7 @@ function Coach(props) {
     props.history.push('/coach/modify');
   };
 
-  const SearchView = () => (
+  const searchView = () => (
     <>
       <Container>
         <CoachSearchForm get={getCoaches} />
@@ -72,7 +72,7 @@ function Coach(props) {
           </Button>
         </Container>
         <Switch>
-          <Route exact path="/coach" render={SearchView} />
+          <Route exact path="/coach" render={searchView} />
           <Route path="/coach/add" render={modifyView} />
           <Route path="/coach/modify" render={modifyView} />
           <Route path="/coach/:id" render={() => <CoachDetails />} />

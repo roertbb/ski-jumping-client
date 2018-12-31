@@ -26,17 +26,19 @@ function CoachDetails({ match }) {
     <>
       <Container>
         {coach === null ? (
-          <p>{`Coach with id ${match.params.id} doens't exists.`}</p>
+          <p>{`Coach with id ${match.params.id} doesn't exists.`}</p>
         ) : !coach ? (
           <Spinner />
         ) : (
           <>
-            <Table>
+            <Table noActions>
               <thead>
                 <tr>
                   <th>First Name</th>
                   <th>Surname</th>
                   <th>Birthdate</th>
+                  <th>Nationality</th>
+                  <th>Team</th>
                 </tr>
               </thead>
               <tbody>
@@ -44,6 +46,10 @@ function CoachDetails({ match }) {
                   <td>{coach.first_name}</td>
                   <td>{coach.surname}</td>
                   <td>{coach.birth_date}</td>
+                  <td>{coach.nationality}</td>
+                  <td>
+                    <Link to={`/team/${coach.team_id}`}>{coach.team}</Link>
+                  </td>
                 </tr>
               </tbody>
             </Table>

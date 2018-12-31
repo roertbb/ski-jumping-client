@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import Button from './Button';
 import Spinner from './Spiner';
 import { withRouter } from 'react-router-dom';
@@ -22,11 +22,15 @@ export const Table = styled.table`
     border: 1px solid ${({ theme }) => theme.color.gray};
   }
 
-  td:last-child,
-  th:last-child {
-    width: ${({ info, single }) =>
-      info ? '220px' : single ? '80px' : '150px'};
-  }
+  ${({ noActions }) =>
+    !noActions &&
+    css`
+      td:last-child,
+      th:last-child {
+        width: ${({ info, single }) =>
+          info ? '220px' : single ? '80px' : '150px'};
+      }
+    `}
 `;
 
 function TableWrapper({

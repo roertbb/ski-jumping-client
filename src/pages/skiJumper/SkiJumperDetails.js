@@ -26,12 +26,12 @@ function SkiJumperDetails({ match }) {
     <>
       <Container>
         {skiJumper === null ? (
-          <p>{`Ski Jumper with id ${match.params.id} doens't exists.`}</p>
+          <p>{`Ski Jumper with id ${match.params.id} doesn't exists.`}</p>
         ) : !skiJumper ? (
           <Spinner />
         ) : (
           <>
-            <Table>
+            <Table noActions>
               <thead>
                 <tr>
                   <th>First Name</th>
@@ -49,11 +49,11 @@ function SkiJumperDetails({ match }) {
                   <td>{skiJumper.birth_date}</td>
                   <td>{skiJumper.height}</td>
                   <td>{skiJumper.weight}</td>
-                  <td>{skiJumper.bmi.toFixed(3)}</td>
+                  <td>{skiJumper.bmi && skiJumper.bmi.toFixed(3)}</td>
                 </tr>
               </tbody>
             </Table>
-            <Table>
+            <Table noActions>
               <thead>
                 <tr>
                   <th>Team</th>

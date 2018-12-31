@@ -1,4 +1,5 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import Row from '../../components/Row';
@@ -12,7 +13,7 @@ const TeamValidationSchema = Yup.object().shape({
     .required(`Required`)
 });
 
-const TeamForm = ({ hideModifyView, add, patch, modifyValue }) => {
+const TeamForm = ({ add, patch, modifyValue, history }) => {
   const initialValues = modifyValue !== null ? modifyValue : { team: '' };
 
   return (
@@ -20,10 +21,11 @@ const TeamForm = ({ hideModifyView, add, patch, modifyValue }) => {
       initialValues={initialValues}
       enableReinitialize={true}
       onSubmit={async (values, { setSubmitting }) => {
-        if (modifyValue === null) await add(values);
-        else await patch({ team_id: modifyValue.team_id }, values);
+        let status;
+        if (modifyValue === null) status = await add(values);
+        else status = await patch({ team_id: modifyValue.team_id }, values);
         setSubmitting(false);
-        hideModifyView();
+        if (status) history.push('/team');
       }}
       validationSchema={TeamValidationSchema}
     >
@@ -55,7 +57,7 @@ const TeamForm = ({ hideModifyView, add, patch, modifyValue }) => {
                 Submit
               </Button>
               <Button
-                onClick={() => hideModifyView()}
+                onClick={() => history.push('/team')}
                 color="info"
                 type="button"
               >
@@ -69,4 +71,4 @@ const TeamForm = ({ hideModifyView, add, patch, modifyValue }) => {
   );
 };
 
-export default TeamForm;
+export default withRouter(TeamForm);
