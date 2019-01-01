@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Route, Switch, withRouter } from 'react-router-dom';
 import useData from '../../hooks/useData';
 import ContentWrapper from '../../components/ContentWrapper';
 import Container from '../../components/Container';
@@ -12,8 +13,10 @@ import { Table } from '../../components/Table';
 import PlacementDetails from './PlacementDetails';
 import SeriesResultForm from './SeriesResultForm';
 import axios from '../../axios';
+import OverlaySpinner from '../../components/SpinnerOverlay';
+import Spinner from '../../components/Spiner';
 
-function Placement() {
+function Placement({ history, location }) {
   const [
     placements,
     getPlacement,
@@ -24,17 +27,18 @@ function Placement() {
   ] = useData('placement', ['ski_jumper_id', 'competition_id'], 'place');
 
   const [competitions] = useData('competition');
-  const parsedCompetitions = competitions.reduce((prev, competition) => {
-    prev[competition.competition_id] = `${competition.name} (${
-      competition.competition_date
-    })`;
-    return prev;
-  }, {});
+  const parsedCompetitions =
+    competitions &&
+    competitions.reduce((prev, competition) => {
+      prev[competition.competition_id] = `${competition.name} (${
+        competition.competition_date
+      })`;
+      return prev;
+    }, {});
 
   const [competitionData, setCompetitionData] = useState('');
   const [personData, setPersonData] = useState('');
   const [seriesData, setSeriesData] = useState('');
-  const [view, setView] = useState('placement');
 
   const refetchPlacements = async () => {
     await getPlacement({ competition_id: competitionData });
@@ -51,180 +55,203 @@ function Placement() {
     () => {
       refetchPlacements();
     },
-    [view === 'placement']
+    [location.pathname !== '/placement']
   );
 
-  let renderedView = '';
-  if (view === 'placement') {
-    renderedView = (
-      <>
-        <Container blank>
-          <h1>Placement</h1>
-          <Button
-            color={competitionData !== '' ? 'info' : 'disabled'}
-            onClick={() => competitionData !== '' && setView('add_placement')}
-          >
-            Add Ski Jumper to Competition
-          </Button>
-        </Container>
-        <Container>
-          <Formik
-            initialValues={{ competition_id: competitionData }}
-            enableReinitialize={true}
-            validate={async values => {
-              console.log(values);
-              await setCompetitionData(Number(values.competition_id));
-              await getPlacement({ competition_id: values.competition_id });
-            }}
-            validateOnBlur={false}
-          >
-            {({
-              isSubmitting,
-              errors,
-              touched,
-              handleBlur,
-              handleChange,
-              values
-            }) => (
-              <FormContext.Provider
-                value={{
-                  handleBlur,
-                  handleChange,
-                  values,
-                  errors,
-                  touched
-                }}
-              >
-                <Form>
-                  <Row>
-                    <FormGroupInput
-                      name="competition_id"
-                      placeholder="competition (date)"
-                      label="Choose Competition:"
-                      options={parsedCompetitions}
-                    />
-                  </Row>
-                  <Row>
-                    <Button
-                      color={competitionData !== '' ? 'info' : 'disabled'}
-                      type="button"
-                      onClick={() =>
-                        competitionData !== '' && finishCompetition()
-                      }
-                    >
-                      Finish Competition
-                    </Button>
-                  </Row>
-                </Form>
-              </FormContext.Provider>
-            )}
-          </Formik>
-        </Container>
-        {/* render team results if team competition */}
-        <Container>
-          {competitionData === '' ? (
-            <p>choose competition from above</p>
-          ) : placements.length === 0 ? (
-            <p>
-              Couldn't find any ski jumper taking part in that competition, add
-              one by button above 😉
-            </p>
-          ) : (
-            <Table single>
-              <thead>
-                <tr>
-                  <th>Place</th>
-                  <th>Ski Jumper</th>
-                  <th>Points</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {placements.map(
-                  ({
-                    person_id,
-                    competition_id,
-                    place,
-                    first_name,
-                    surname,
-                    points
-                  }) => (
-                    <tr key={person_id}>
-                      <td>{place}</td>
-                      <td>
-                        <p>{`${first_name} ${surname}`}</p>
-                      </td>
-                      <td>{points}</td>
-                      <td>
-                        <Button
-                          color="info"
-                          type="button"
-                          onClick={async () => {
-                            await setPersonData(person_id);
-                            await setView('placement_details');
-                          }}
-                        >
-                          <span role="img" aria-label="info">
-                            🔍
-                          </span>
-                        </Button>
-                        {/* <Button
-                          onClick={() =>
-                            deletePlacement({
-                              competition_id,
-                              person_id
-                            })
-                          }
-                          color="danger"
-                          type="button"
-                        >
-                          <span role="img" aria-label="delete">
-                            ❌
-                          </span>
-                        </Button> */}
-                      </td>
-                    </tr>
-                  )
-                )}
-              </tbody>
-            </Table>
+  const placementView = () => (
+    <>
+      <Container>
+        {!competitions && <OverlaySpinner />}
+        <Formik
+          initialValues={{ competition_id: competitionData }}
+          enableReinitialize={true}
+          validate={async values => {
+            await setCompetitionData(Number(values.competition_id));
+            await getPlacement({ competition_id: values.competition_id });
+          }}
+          validateOnBlur={false}
+        >
+          {({
+            isSubmitting,
+            errors,
+            touched,
+            handleBlur,
+            handleChange,
+            values
+          }) => (
+            <FormContext.Provider
+              value={{
+                handleBlur,
+                handleChange,
+                values,
+                errors,
+                touched
+              }}
+            >
+              <Form>
+                <Row>
+                  <FormGroupInput
+                    name="competition_id"
+                    placeholder="competition (date)"
+                    label="Choose Competition:"
+                    options={parsedCompetitions}
+                  />
+                </Row>
+                <Row>
+                  <Button
+                    color={competitionData !== '' ? 'info' : 'disabled'}
+                    type="button"
+                    onClick={() =>
+                      competitionData !== '' && finishCompetition()
+                    }
+                  >
+                    Finish Competition
+                  </Button>
+                </Row>
+              </Form>
+            </FormContext.Provider>
           )}
-        </Container>
-      </>
-    );
-  } else if (view === 'add_placement') {
-    renderedView = (
-      <AddPlacement
-        competitionId={competitionData}
-        addPlacement={addPlacement}
-        placements={placements}
-        setView={setView}
-      />
-    );
-  } else if (view === 'placement_details') {
-    renderedView = (
-      <PlacementDetails
-        competitionId={competitionData}
-        personId={personData}
-        setView={setView}
-        setSeriesData={setSeriesData}
-      />
-    );
-  } else if (view === 'edit_series') {
-    renderedView = (
-      <SeriesResultForm
-        competitionId={competitionData}
-        personId={personData}
-        seriesId={seriesData}
-        setView={setView}
-      />
-    );
-  }
+        </Formik>
+      </Container>
+      {/* render team results if team competition */}
+      <Container>
+        {competitionData === '' ? (
+          <p>choose competition from above</p>
+        ) : placements.length === 0 && competitionData !== '' ? (
+          <Spinner />
+        ) : placements.length === 0 ? (
+          <p>
+            Couldn't find any ski jumper taking part in that competition, add
+            one by button above{' '}
+            <span role="img" aria-label="smile">
+              😉
+            </span>
+          </p>
+        ) : (
+          <Table single>
+            <thead>
+              <tr>
+                <th>Place</th>
+                <th>Ski Jumper</th>
+                <th>Points</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {placements.map(
+                ({
+                  person_id,
+                  competition_id,
+                  place,
+                  first_name,
+                  surname,
+                  points
+                }) => (
+                  <tr key={person_id}>
+                    <td>{place}</td>
+                    <td>
+                      <p>{`${first_name} ${surname}`}</p>
+                    </td>
+                    <td>{points}</td>
+                    <td>
+                      <Button
+                        color="info"
+                        type="button"
+                        onClick={async () => {
+                          await setPersonData(person_id);
+                          history.push(
+                            `/placement/${competition_id}/${person_id}`
+                          );
+                        }}
+                      >
+                        <span role="img" aria-label="info">
+                          🔍
+                        </span>
+                      </Button>
+                      {/* <Button
+                        onClick={() =>
+                          deletePlacement({
+                            competition_id,
+                            person_id
+                          })
+                        }
+                        color="danger"
+                        type="button"
+                      >
+                        <span role="img" aria-label="delete">
+                          ❌
+                        </span>
+                      </Button> */}
+                    </td>
+                  </tr>
+                )
+              )}
+            </tbody>
+          </Table>
+        )}
+      </Container>
+    </>
+  );
+
   return (
     <>
-      <ContentWrapper>{renderedView}</ContentWrapper>
+      <ContentWrapper>
+        <Container blank>
+          <h1>Placement</h1>
+          {location.pathname === '/placement' ? (
+            <Button
+              color={competitionData !== '' ? 'info' : 'disabled'}
+              onClick={() =>
+                competitionData !== '' &&
+                history.push('/placement/add-ski-jumper')
+              }
+            >
+              Add Ski Jumper to Competition
+            </Button>
+          ) : (
+            <Button color={'info'} onClick={() => history.push('/placement')}>
+              back to Placement
+            </Button>
+          )}
+        </Container>
+        <Switch>
+          <Route exact path="/placement" render={placementView} />
+          <Route
+            path="/placement/add-ski-jumper"
+            render={() => (
+              <AddPlacement
+                competitionId={competitionData}
+                addPlacement={addPlacement}
+                placements={placements}
+              />
+            )}
+          />
+          <Route
+            exact
+            path="/placement/:competitionId/:skiJumperId"
+            render={() => (
+              <PlacementDetails
+                competitionId={competitionData}
+                personId={personData}
+                setSeriesData={setSeriesData}
+              />
+            )}
+          />
+          <Route
+            exact
+            path="/placement/:competitionId/:skiJumperId/:seriesId"
+            render={() => (
+              <SeriesResultForm
+                competitionId={competitionData}
+                personId={personData}
+                seriesId={seriesData}
+              />
+            )}
+          />
+        </Switch>
+      </ContentWrapper>
     </>
   );
 }
 
-export default Placement;
+export default withRouter(Placement);

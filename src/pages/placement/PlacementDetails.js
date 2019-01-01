@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from 'react';
+import { Redirect, Link, withRouter } from 'react-router-dom';
 import Container from '../../components/Container';
 import Button from '../../components/Button';
 import useData from '../../hooks/useData';
 import Row from '../../components/Row';
 import axios from '../../axios';
+import { Table } from '../../components/Table';
+import OverlaySpinner from '../../components/SpinnerOverlay';
 
-function PlacementDetails({ setView, competitionId, personId, setSeriesData }) {
+function PlacementDetails({ competitionId, personId, setSeriesData, history }) {
   const [skiJumper] = useData('ski-jumper', 'person_id');
-  const filteredSkiJumper = skiJumper.filter(
-    skiJumper => skiJumper.person_id === personId
-  )[0];
+  const filteredSkiJumper =
+    skiJumper &&
+    skiJumper.filter(skiJumper => skiJumper.person_id === personId)[0];
 
   const [first, setFirst] = useState(null);
   const [second, setSecond] = useState(null);
@@ -31,25 +34,47 @@ function PlacementDetails({ setView, competitionId, personId, setSeriesData }) {
 
   return (
     <>
-      <Container blank>
-        <h1>Placement</h1>
-        <Button color="info" onClick={() => setView('placement')}>
-          back to Placement
-        </Button>
-      </Container>
+      {(!personId || !competitionId) && <Redirect to="/placement" />}
       <Container>
+        {!filteredSkiJumper && <OverlaySpinner />}
         <h3>Ski Jumper</h3>
         {filteredSkiJumper && (
           <>
-            <p>{`${filteredSkiJumper.first_name} ${
-              filteredSkiJumper.surname
-            }`}</p>
+            <Table single>
+              <thead>
+                <tr>
+                  <th>Classification</th>
+                  <th>Name</th>
+                  <th>Surname</th>
+                  <th>Classification Points</th>
+                  <th>Details</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{filteredSkiJumper.classification}</td>
+                  <td>{filteredSkiJumper.first_name}</td>
+                  <td>{filteredSkiJumper.surname}</td>
+                  <td>{filteredSkiJumper.classification_points}</td>
+                  <td>
+                    <Link to={`/ski-jumper/${filteredSkiJumper.person_id}`}>
+                      <Button color="info">
+                        <span role="img" aria-label="info">
+                          🔍
+                        </span>
+                      </Button>
+                    </Link>
+                  </td>
+                </tr>
+              </tbody>
+            </Table>
           </>
         )}
       </Container>
       {[first, second].map((series, index) => {
         return (
           <Container key={index}>
+            {!series && <OverlaySpinner />}
             {series === null ? (
               <>
                 <p>{`Enter #${index + 1} Series Result for Ski Jumper`}</p>
@@ -57,8 +82,10 @@ function PlacementDetails({ setView, competitionId, personId, setSeriesData }) {
                   <Button
                     color="info"
                     onClick={() => {
-                      setView('edit_series');
                       setSeriesData(index + 1);
+                      history.push(
+                        `/placement/${competitionId}/${personId}/${index + 1}`
+                      );
                     }}
                   >
                     Enter Series Result
@@ -67,42 +94,51 @@ function PlacementDetails({ setView, competitionId, personId, setSeriesData }) {
               </>
             ) : (
               <>
-                <h3>{`#${series.series_id} series results`}</h3>
-                <p>
-                  <b>state:</b> {series.state}
-                </p>
-                <p>
-                  <b>distance:</b> {series.distance}
-                </p>
-                <p>
-                  <b>gate:</b> {series.gate}
-                </p>
-                <p>
-                  <b>style points:</b> {series.style_points}
-                </p>
-                <p>
-                  <b>distance points:</b> {series.distance_points}
-                </p>
-                <p>
-                  <b>gate points:</b> {series.gate_points}
-                </p>
-                <p>
-                  <b>wind points:</b> {series.wind_points}
-                </p>
-                <Row>
-                  <Button
-                    onClick={() => {
-                      setSeriesData(series.series_id);
-                      setView('edit_series');
-                    }}
-                    color="edit"
-                    type="button"
-                  >
-                    <span role="img" aria-label="update">
-                      ✍
-                    </span>
-                  </Button>
-                </Row>
+                <Container blank>
+                  <h3>{`#${series.series_id} Series Result`}</h3>
+                  <Row>
+                    <Button
+                      onClick={() => {
+                        setSeriesData(series.series_id);
+                        history.push(
+                          `/placement/${competitionId}/${personId}/${
+                            series.series_id
+                          }`
+                        );
+                      }}
+                      color="edit"
+                      type="button"
+                    >
+                      <span role="img" aria-label="update">
+                        ✍
+                      </span>
+                    </Button>
+                  </Row>
+                </Container>
+                <Table noActions>
+                  <thead>
+                    <tr>
+                      <th>State</th>
+                      <th>Distance</th>
+                      <th>Gate</th>
+                      <th>Style Points</th>
+                      <th>Distance Points</th>
+                      <th>Gate Points</th>
+                      <th>Wind Points</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>{series.state}</td>
+                      <td>{series.distance}</td>
+                      <td>{series.gate}</td>
+                      <td>{series.style_points}</td>
+                      <td>{series.distance_points}</td>
+                      <td>{series.gate_points}</td>
+                      <td>{series.wind_points}</td>
+                    </tr>
+                  </tbody>
+                </Table>
               </>
             )}
           </Container>
@@ -112,4 +148,4 @@ function PlacementDetails({ setView, competitionId, personId, setSeriesData }) {
   );
 }
 
-export default PlacementDetails;
+export default withRouter(PlacementDetails);

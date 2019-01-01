@@ -16,7 +16,9 @@ const Container = styled.div`
       : css`
           display: flex;
           justify-content: space-between;
-          h1 {
+          align-items: center;
+          h1,
+          h3 {
             margin-bottom: 0;
           }
         `}

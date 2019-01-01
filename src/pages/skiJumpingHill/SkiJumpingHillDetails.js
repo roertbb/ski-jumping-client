@@ -4,7 +4,6 @@ import axios from '../../axios';
 import Container from '../../components/Container';
 import Spinner from '../../components/Spiner';
 import { Table } from '../../components/Table';
-import Link from '../../components/Link';
 
 function SkiJumpingHillDetails({ match }) {
   const [hill, setHill] = useState(undefined);

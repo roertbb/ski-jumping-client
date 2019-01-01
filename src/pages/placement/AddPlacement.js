@@ -1,4 +1,5 @@
 import React from 'react';
+import { Redirect, withRouter } from 'react-router-dom';
 import * as Yup from 'yup';
 import Container from '../../components/Container';
 import Button from '../../components/Button';
@@ -8,21 +9,25 @@ import FormGroupInput from '../../components/FormGroupInput';
 import useData from '../../hooks/useData';
 import FormContext from '../../context/FormContext';
 
-function AddPlacement({ competitionId, addPlacement, placements, setView }) {
+function AddPlacement({ competitionId, addPlacement, placements, history }) {
   const [skiJumpers] = useData('ski-jumper');
   const parseSkiJumpers = () => {
-    return skiJumpers.reduce((prev, skiJumper) => {
-      if (
-        !placements.filter(
-          placement => placement.person_id === skiJumper.person_id
-        ).length
-      )
-        prev[skiJumper.person_id] = `${skiJumper.first_name} ${
-          skiJumper.surname
-        }`;
+    return (
+      skiJumpers &&
+      placements &&
+      skiJumpers.reduce((prev, skiJumper) => {
+        if (
+          !placements.filter(
+            placement => placement.person_id === skiJumper.person_id
+          ).length
+        )
+          prev[skiJumper.person_id] = `${skiJumper.first_name} ${
+            skiJumper.surname
+          }`;
 
-      return prev;
-    }, {});
+        return prev;
+      }, {})
+    );
   };
   const parsedSkiJumpers = parseSkiJumpers();
 
@@ -32,12 +37,7 @@ function AddPlacement({ competitionId, addPlacement, placements, setView }) {
 
   return (
     <>
-      <Container blank>
-        <h1>Placement</h1>
-        <Button color="info" onClick={() => setView('placement')}>
-          back to Placement
-        </Button>
-      </Container>
+      {!competitionId && <Redirect to="/placement" />}
       <Container>
         <Formik
           initialValues={{ person_id: '' }}
@@ -48,7 +48,7 @@ function AddPlacement({ competitionId, addPlacement, placements, setView }) {
               person_id,
               competition_id: competitionId
             });
-            setView('placement');
+            history.push('/placement');
           }}
           validationSchema={SkiJumpersValidationSchema}
         >
@@ -93,4 +93,4 @@ function AddPlacement({ competitionId, addPlacement, placements, setView }) {
   );
 }
 
-export default AddPlacement;
+export default withRouter(AddPlacement);
