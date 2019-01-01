@@ -6,6 +6,7 @@ import Button from '../../components/Button';
 import FormGroupInput from '../../components/FormGroupInput';
 import FormContext from '../../context/FormContext';
 import FormGroup from '../../components/FormGroup';
+import OverlaySpinner from '../../components/SpinnerOverlay';
 
 function IndividualCompetitionSearchForm({ get }) {
   const [tournaments] = useDate('tournament');
@@ -56,6 +57,7 @@ function IndividualCompetitionSearchForm({ get }) {
       {({ isSubmitting, resetForm, handleBlur, handleChange, values }) => (
         <FormContext.Provider value={{ handleBlur, handleChange, values }}>
           <Form>
+            {!tournaments && !skiJumpingHills && <OverlaySpinner />}
             <h3>Search Individual Competitions</h3>
             <Row>
               <FormGroupInput

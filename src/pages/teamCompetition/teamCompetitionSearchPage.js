@@ -5,6 +5,7 @@ import Row from '../../components/Row';
 import Button from '../../components/Button';
 import FormGroupInput from '../../components/FormGroupInput';
 import FormContext from '../../context/FormContext';
+import OverlaySpinner from '../../components/SpinnerOverlay';
 
 function TeamCompetitionSearchForm({ get }) {
   const [tournaments] = useDate('tournament');
@@ -53,6 +54,7 @@ function TeamCompetitionSearchForm({ get }) {
       {({ isSubmitting, resetForm, handleBlur, handleChange, values }) => (
         <FormContext.Provider value={{ handleBlur, handleChange, values }}>
           <Form>
+            {!tournaments && !skiJumpingHills && <OverlaySpinner />}
             <h3>Search Team Competitions</h3>
             <Row>
               <FormGroupInput

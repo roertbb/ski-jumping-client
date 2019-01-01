@@ -13,7 +13,7 @@ import Team from './pages/team/TeamPage';
 import SkiJumper from './pages/skiJumper/SkiJumperPage';
 import Coach from './pages/coach/CoachPage';
 import IndividualCompetition from './pages/individualCompetition/individualCompetitionPage';
-import TeamCompetition from './pages/teamCompetition/teamCompetitionPage';
+import TeamCompetition from './pages/teamCompetition/TeamCompetitionPage';
 import Placement from './pages/placement/PlacementPage';
 
 const App = function() {

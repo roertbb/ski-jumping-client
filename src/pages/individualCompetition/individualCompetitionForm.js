@@ -8,6 +8,7 @@ import Button from '../../components/Button';
 import FormContext from '../../context/FormContext';
 import FormGroupInput from '../../components/FormGroupInput';
 import FormGroup from '../../components/FormGroup';
+import OverlaySpinner from '../../components/SpinnerOverlay';
 
 const IndividualCompetitionValidationSchema = Yup.object().shape({
   competition_date: Yup.date().required(`Required`),
@@ -82,6 +83,7 @@ const IndividualCompetitionForm = ({ add, patch, modifyValue, history }) => {
           value={{ handleBlur, handleChange, values, errors, touched }}
         >
           <Form>
+            {!tournaments && !skiJumpingHills && <OverlaySpinner />}
             <h3>{`${
               modifyValue === null ? 'Create' : 'Edit'
             } Individual Competitions`}</h3>
