@@ -1,4 +1,5 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom';
 import useDate from '../../hooks/useData';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
@@ -18,12 +19,7 @@ const IndividualCompetitionValidationSchema = Yup.object().shape({
   qualification_date: Yup.date().required(`Required`)
 });
 
-const IndividualCompetitionForm = ({
-  hideModifyView,
-  add,
-  patch,
-  modifyValue
-}) => {
+const IndividualCompetitionForm = ({ add, patch, modifyValue, history }) => {
   const [tournaments] = useDate('tournament');
   const parsedTournament =
     tournaments &&
@@ -62,10 +58,15 @@ const IndividualCompetitionForm = ({
       initialValues={initialValues}
       enableReinitialize={true}
       onSubmit={async (values, { setSubmitting }) => {
-        if (modifyValue === null) await add(values);
-        else await patch(modifyValue.competition_id, values);
+        let status;
+        if (modifyValue === null) status = await add(values);
+        else
+          status = await patch(
+            { competition_id: modifyValue.competition_id },
+            values
+          );
         setSubmitting(false);
-        hideModifyView();
+        if (status) history.push('/individual-competition');
       }}
       validationSchema={IndividualCompetitionValidationSchema}
     >
@@ -129,7 +130,7 @@ const IndividualCompetitionForm = ({
                 Submit
               </Button>
               <Button
-                onClick={() => hideModifyView()}
+                onClick={() => history.push('/individual-competition')}
                 color="info"
                 type="button"
               >
@@ -143,4 +144,4 @@ const IndividualCompetitionForm = ({
   );
 };
 
-export default IndividualCompetitionForm;
+export default withRouter(IndividualCompetitionForm);
