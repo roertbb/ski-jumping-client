@@ -19,13 +19,16 @@ const SkiJumperValidationSchema = Yup.object().shape({
   birth_date: Yup.date().required(`Required`),
   team_id: Yup.number().required(`Required`),
   fis_id: Yup.number()
+    .min(1, 'Too Small!')
     .max(99999, 'Too Long!')
     .required('Required'),
   active: Yup.string().required('Required'),
   height: Yup.number()
-    .max(999, 'Too Long!')
+    .min(100, 'Too Small!')
+    .max(250, 'Too Long!')
     .required('Required'),
   weight: Yup.number()
+    .min(30, 'Too Small!')
     .max(99, 'Too Long!')
     .required('Required')
 });

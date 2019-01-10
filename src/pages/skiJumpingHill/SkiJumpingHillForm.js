@@ -19,10 +19,12 @@ const SkiJumpingHillValidationSchema = Yup.object().shape({
     .required(`Required`),
   type: Yup.string().required('Required'),
   size: Yup.number()
-    .max(999, 'Too Long!')
+    .min(1, 'Too Small!')
+    .max(300, 'Too Long!')
     .required('Required'),
   k_point: Yup.number()
-    .max(999, 'Too Long!')
+    .min(1, 'Too Small!')
+    .max(300, 'Too Long!')
     .required('Required')
 });
 

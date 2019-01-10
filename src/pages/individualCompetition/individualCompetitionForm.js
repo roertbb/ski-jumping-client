@@ -13,7 +13,8 @@ import OverlaySpinner from '../../components/SpinnerOverlay';
 const IndividualCompetitionValidationSchema = Yup.object().shape({
   competition_date: Yup.date().required(`Required`),
   start_gate: Yup.number()
-    .max(99, 'Too Long!')
+    .min(1, 'Too Small!')
+    .max(20, 'Too Long!')
     .required('Required'),
   tournament_id: Yup.number(),
   ski_jumping_hill_id: Yup.number().required('Required'),

@@ -13,12 +13,24 @@ import OverlaySpinner from '../../components/SpinnerOverlay';
 
 const SeriesResultValidationSchema = Yup.object().shape({
   state: Yup.string().required(`Required`),
-  distance: Yup.number().max(999, 'Too long!'),
-  gate: Yup.number().max(99, 'Too long!'),
-  style_points: Yup.number().max(999, 'Too long!'),
-  distance_points: Yup.number().max(999, 'Too long!'),
-  gate_points: Yup.number().max(999, 'Too long!'),
-  wind_points: Yup.number().max(999, 'Too long!')
+  distance: Yup.number()
+    .min(0, 'Too long!')
+    .max(300, 'Too long!'),
+  gate: Yup.number()
+    .min(1, 'Too Small!')
+    .max(20, 'Too long!'),
+  style_points: Yup.number()
+    .min(0, 'Too Small!')
+    .max(60, 'Too long!'),
+  distance_points: Yup.number()
+    .min(-400, 'Too Small!')
+    .max(400, 'Too long!'),
+  gate_points: Yup.number()
+    .min(-100, 'Too Small!')
+    .max(100, 'Too long!'),
+  wind_points: Yup.number()
+    .min(-100, 'Too Small!')
+    .max(100, 'Too long!')
 });
 
 const SeriesResultForm = ({
