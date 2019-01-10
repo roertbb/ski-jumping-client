@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import queryString from 'query-string';
 import axios from '../axios';
 import useMessage from './useMessage';
+import { MessageContext } from '../context/MessageContext';
 
 const useData = function(endpoint, tableId, sort = false) {
   const dataId = tableId ? tableId : `${endpoint}_id`.replace('-', '_');
@@ -11,6 +12,8 @@ const useData = function(endpoint, tableId, sort = false) {
   useEffect(() => {
     getData();
   }, []);
+
+  const { addMessage } = useContext(MessageContext);
 
   const getData = async params => {
     try {
@@ -27,11 +30,9 @@ const useData = function(endpoint, tableId, sort = false) {
               return aval < bval ? -1 : bval < aval ? 1 : 0;
             })
           );
-      } else {
-        setMessage('danger', `error fetching tournaments`);
-      }
+      } else throw new Error();
     } catch (error) {
-      setMessage('danger', `error fetching tournaments`);
+      addMessage('error fetching ...', 'danger');
     }
   };
 
@@ -50,10 +51,10 @@ const useData = function(endpoint, tableId, sort = false) {
             }
           })
         );
-        setMessage('success', `successfully deleted tournament`);
-      }
+        addMessage('succesfully deleted ...', 'success');
+      } else throw new Error();
     } catch (error) {
-      setMessage('danger', `error deleting tournaments`);
+      addMessage(`error deleting ...`, 'danger');
     }
   };
 
@@ -62,11 +63,11 @@ const useData = function(endpoint, tableId, sort = false) {
       const response = await axios.post(`${endpoint}`, params);
       if (response.status === 200) {
         setData([...data, response.data.created]);
-        setMessage('success', `successfully created tournament`);
+        addMessage(`successfully created ...`, 'success');
         return true;
-      }
+      } else throw new Error();
     } catch (error) {
-      setMessage('danger', `error creating tournaments`);
+      addMessage(`error creating ...`, 'danger');
       return false;
     }
   };
@@ -89,11 +90,11 @@ const useData = function(endpoint, tableId, sort = false) {
             }
           })
         );
-        setMessage('success', `successfully updated tournament`);
+        addMessage(`successfully created  ...`, 'success');
         return true;
-      }
+      } else throw new Error();
     } catch (error) {
-      setMessage('danger', `error updating tournaments`);
+      addMessage(`error updating ...`, 'danger');
       return false;
     }
   };
