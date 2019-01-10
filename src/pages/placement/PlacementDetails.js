@@ -74,7 +74,7 @@ function PlacementDetails({ competitionId, personId, setSeriesData, history }) {
       {[first, second].map((series, index) => {
         return (
           <Container key={index}>
-            {!series && <OverlaySpinner />}
+            {series === undefined && <OverlaySpinner />}
             {series === null ? (
               <>
                 <p>{`Enter #${index + 1} Series Result for Ski Jumper`}</p>

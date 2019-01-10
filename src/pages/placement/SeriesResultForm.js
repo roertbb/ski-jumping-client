@@ -38,15 +38,14 @@ const SeriesResultForm = ({
     wind_points: ''
   };
 
-  let [series, setSeries] = useState(null);
+  let [series, setSeries] = useState(undefined);
   const getSeriesData = async () => {
     const resp = await axios.get(
       `/series-result?person_id=${personId}&competition_id=${competitionId}&series_id=${seriesId}`
     );
-    if (!!resp.data.results) {
-      setSeries(resp.data.results);
-    }
+    setSeries(resp.data.results);
   };
+
   useEffect(() => {
     getSeriesData();
   }, []);
@@ -57,7 +56,7 @@ const SeriesResultForm = ({
         <Redirect to="/placement" />
       )}
       <Container>
-        {!series && <OverlaySpinner />}
+        {series === undefined && <OverlaySpinner />}
         <Formik
           initialValues={series === null ? initialValues : series}
           enableReinitialize={true}

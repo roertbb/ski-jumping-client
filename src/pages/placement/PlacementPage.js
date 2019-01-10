@@ -117,9 +117,9 @@ function Placement({ history, location }) {
       <Container>
         {competitionData === '' ? (
           <p>choose competition from above</p>
-        ) : placements.length === 0 && competitionData !== '' ? (
+        ) : placements === undefined ? (
           <Spinner />
-        ) : placements.length === 0 ? (
+        ) : placements.length === 0 && competitionData !== '' ? (
           <p>
             Couldn't find any ski jumper taking part in that competition, add
             one by button above{' '}
