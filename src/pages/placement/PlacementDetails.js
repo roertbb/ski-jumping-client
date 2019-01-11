@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Redirect, Link, withRouter } from 'react-router-dom';
+import { Redirect, withRouter } from 'react-router-dom';
 import Container from '../../components/Container';
 import Button from '../../components/Button';
 import useData from '../../hooks/useData';
@@ -7,6 +7,7 @@ import Row from '../../components/Row';
 import axios from '../../axios';
 import { Table } from '../../components/Table';
 import OverlaySpinner from '../../components/SpinnerOverlay';
+import Link from '../../components/Link';
 
 function PlacementDetails({ competitionId, personId, setSeriesData, history }) {
   const [skiJumper] = useData('ski-jumper', 'person_id');

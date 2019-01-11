@@ -29,9 +29,14 @@ function Placement({ history, location }) {
   const parsedCompetitions =
     competitions &&
     competitions.reduce((prev, competition) => {
-      prev[competition.competition_id] = `${competition.name} (${
-        competition.competition_date
-      })`;
+      if (competition.qualification_date)
+        prev[competition.competition_id] = `${competition.name} (${
+          competition.competition_date
+        })`;
+      else
+        prev[competition.competition_id] = `[TEAM COMPETITION] ${
+          competition.name
+        } (${competition.competition_date})`;
       return prev;
     }, {});
 

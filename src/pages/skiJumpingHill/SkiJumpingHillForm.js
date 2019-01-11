@@ -95,7 +95,7 @@ const SkiJumpingHillForm = ({ add, patch, modifyValue, history }) => {
                 name="type"
                 placeholder="ski jumping hill type"
                 label="Type:"
-                options={{ n: 'normal', b: 'big', m: 'mammoth' }}
+                options={{ n: 'normal', l: 'large', m: 'mammoth' }}
               />
             </Row>
             <Row>

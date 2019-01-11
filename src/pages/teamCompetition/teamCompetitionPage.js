@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Switch, Route, withRouter, Link } from 'react-router-dom';
+import { Switch, Route, withRouter } from 'react-router-dom';
 import useData from '../../hooks/useData';
 import { Table } from '../../components/Table';
 import ContentWrapper from '../../components/ContentWrapper';
@@ -9,6 +9,7 @@ import TeamCompetitionForm from './TeamCompetitionForm';
 import TeamCompetitionSearchForm from './TeamCompetitionSearchPage';
 import TeamCompetitionDetails from './TeamCompetitionDetails';
 import Spinner from '../../components/Spiner';
+import Link from '../../components/Link';
 
 function TeamCompetition(props) {
   const [
