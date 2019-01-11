@@ -18,7 +18,12 @@ const IndividualCompetitionValidationSchema = Yup.object().shape({
     .required('Required'),
   tournament_id: Yup.number(),
   ski_jumping_hill_id: Yup.number().required('Required'),
-  qualification_date: Yup.date().required(`Required`)
+  qualification_date: Yup.date()
+    .required(`Required`)
+    .max(
+      Yup.ref('competition_date') ? Yup.ref('competition_date') : null,
+      'Qualification should take place before competition'
+    )
 });
 
 const IndividualCompetitionForm = ({ add, patch, modifyValue, history }) => {
