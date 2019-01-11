@@ -15,6 +15,7 @@ import SeriesResultForm from './SeriesResultForm';
 import axios from '../../axios';
 import OverlaySpinner from '../../components/SpinnerOverlay';
 import Spinner from '../../components/Spiner';
+import Link from '../../components/Link';
 
 function Placement({ history, location }) {
   const [
@@ -36,12 +37,16 @@ function Placement({ history, location }) {
       return prev;
     }, {});
 
+  const [teamResults, getTeamResults] = useData('result', [], 'place');
+  console.log(teamResults);
+
   const [competitionData, setCompetitionData] = useState('');
   const [personData, setPersonData] = useState('');
   const [seriesData, setSeriesData] = useState('');
 
   const refetchPlacements = async () => {
     await getPlacement({ competition_id: competitionData });
+    await getTeamResults({ competition_id: competitionData });
   };
 
   const finishCompetition = async () => {
@@ -68,6 +73,7 @@ function Placement({ history, location }) {
           validate={async values => {
             await setCompetitionData(Number(values.competition_id));
             await getPlacement({ competition_id: values.competition_id });
+            await getTeamResults({ competition_id: values.competition_id });
           }}
           validateOnBlur={false}
         >
@@ -113,7 +119,33 @@ function Placement({ history, location }) {
           )}
         </Formik>
       </Container>
-      {/* render team results if team competition */}
+      {teamResults && teamResults.length > 0 && (
+        <>
+          <Container>
+            <h3>Teams Classification</h3>
+            <Table noActions>
+              <thead>
+                <tr>
+                  <th>Place</th>
+                  <th>Team</th>
+                  <th>Points</th>
+                </tr>
+              </thead>
+              <tbody>
+                {teamResults.map(result => (
+                  <tr key={result.team_id}>
+                    <td>{result.place}</td>
+                    <td>
+                      <Link to={`/team/${result.team_id}`}>{result.team}</Link>
+                    </td>
+                    <td>{result.points}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </Container>
+        </>
+      )}
       <Container>
         {competitionData === '' ? (
           <p>choose competition from above</p>
@@ -128,47 +160,51 @@ function Placement({ history, location }) {
             </span>
           </p>
         ) : (
-          <Table single>
-            <thead>
-              <tr>
-                <th>Place</th>
-                <th>Ski Jumper</th>
-                <th>Points</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {placements.map(
-                ({
-                  person_id,
-                  competition_id,
-                  place,
-                  first_name,
-                  surname,
-                  points
-                }) => (
-                  <tr key={person_id}>
-                    <td>{place}</td>
-                    <td>
-                      <p>{`${first_name} ${surname}`}</p>
-                    </td>
-                    <td>{points}</td>
-                    <td>
-                      <Button
-                        color="info"
-                        type="button"
-                        onClick={async () => {
-                          await setPersonData(person_id);
-                          history.push(
-                            `/placement/${competition_id}/${person_id}`
-                          );
-                        }}
-                      >
-                        <span role="img" aria-label="info">
-                          🔍
-                        </span>
-                      </Button>
-                      {/* <Button
+          <>
+            <h3>Ski Jumpers Classification</h3>
+            <Table single>
+              <thead>
+                <tr>
+                  <th>Place</th>
+                  <th>Ski Jumper</th>
+                  <th>Points</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {placements.map(
+                  ({
+                    person_id,
+                    competition_id,
+                    place,
+                    first_name,
+                    surname,
+                    points
+                  }) => (
+                    <tr key={person_id}>
+                      <td>{place}</td>
+                      <td>
+                        <Link
+                          to={`/ski-jumper/${person_id}`}
+                        >{`${first_name} ${surname}`}</Link>
+                      </td>
+                      <td>{points}</td>
+                      <td>
+                        <Button
+                          color="info"
+                          type="button"
+                          onClick={async () => {
+                            await setPersonData(person_id);
+                            history.push(
+                              `/placement/${competition_id}/${person_id}`
+                            );
+                          }}
+                        >
+                          <span role="img" aria-label="info">
+                            🔍
+                          </span>
+                        </Button>
+                        {/* <Button
                         onClick={() =>
                           deletePlacement({
                             competition_id,
@@ -182,12 +218,13 @@ function Placement({ history, location }) {
                           ❌
                         </span>
                       </Button> */}
-                    </td>
-                  </tr>
-                )
-              )}
-            </tbody>
-          </Table>
+                      </td>
+                    </tr>
+                  )
+                )}
+              </tbody>
+            </Table>
+          </>
         )}
       </Container>
     </>
