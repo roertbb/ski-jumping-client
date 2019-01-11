@@ -10,9 +10,7 @@ import TeamSearchForm from './TeamSearchForm';
 import TeamDetails from './TeamDetails';
 
 function Team(props) {
-  const [teams, getTeams, addTeams, patchTeams, deleteTeams, message] = useDate(
-    'team'
-  );
+  const [teams, getTeams, addTeams, patchTeams, deleteTeams] = useDate('team');
 
   const [modElem, setModElem] = useState(null);
 

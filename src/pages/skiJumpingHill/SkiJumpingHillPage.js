@@ -15,8 +15,7 @@ function SkiJumpingHillPage(props) {
     getSkiJumpingHill,
     addSkiJumpingHill,
     patchSkiJumpingHill,
-    deleteSkiJumpingHill,
-    message
+    deleteSkiJumpingHill
   ] = useData('ski-jumping-hill');
 
   const [modElem, setModElem] = useState(null);

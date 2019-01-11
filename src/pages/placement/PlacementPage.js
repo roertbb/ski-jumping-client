@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
 import useData from '../../hooks/useData';
 import ContentWrapper from '../../components/ContentWrapper';
@@ -16,16 +16,14 @@ import axios from '../../axios';
 import OverlaySpinner from '../../components/SpinnerOverlay';
 import Spinner from '../../components/Spiner';
 import Link from '../../components/Link';
+import { MessageContext } from '../../context/MessageContext';
 
 function Placement({ history, location }) {
-  const [
-    placements,
-    getPlacement,
-    addPlacement,
-    _,
-    deletePlacement,
-    message
-  ] = useData('placement', ['ski_jumper_id', 'competition_id'], 'place');
+  const [placements, getPlacement, addPlacement] = useData(
+    'placement',
+    ['ski_jumper_id', 'competition_id'],
+    'place'
+  );
 
   const [competitions] = useData('competition');
   const parsedCompetitions =
@@ -38,7 +36,6 @@ function Placement({ history, location }) {
     }, {});
 
   const [teamResults, getTeamResults] = useData('result', [], 'place');
-  console.log(teamResults);
 
   const [competitionData, setCompetitionData] = useState('');
   const [personData, setPersonData] = useState('');
@@ -49,11 +46,18 @@ function Placement({ history, location }) {
     await getTeamResults({ competition_id: competitionData });
   };
 
+  const { addMessage } = useContext(MessageContext);
+
   const finishCompetition = async () => {
     const resp = await axios.post(
       `/competition/finish-competition?competition_id=${competitionData}`
     );
-    console.log(resp);
+    if (resp.status === 200) {
+      addMessage(
+        'Successfully finished Competition. Classification has been updated.',
+        'success'
+      );
+    }
   };
 
   useEffect(

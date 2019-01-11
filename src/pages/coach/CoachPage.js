@@ -15,8 +15,7 @@ function Coach(props) {
     getCoaches,
     addCoaches,
     patchCoaches,
-    deleteCoaches,
-    message
+    deleteCoaches
   ] = useDate('coach', 'person_id');
 
   const [modElem, setModElem] = useState(null);

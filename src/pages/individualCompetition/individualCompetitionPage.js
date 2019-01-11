@@ -16,8 +16,7 @@ function IndividualCompetition(props) {
     getIndComp,
     addIndComp,
     patchIndComp,
-    deleteIndComp,
-    message
+    deleteIndComp
   ] = useData('individual-competition', 'competition_id');
 
   const [hills] = useData('ski-jumping-hill');

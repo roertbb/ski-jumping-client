@@ -16,8 +16,7 @@ function TeamCompetition(props) {
     getTeamComp,
     addTeamComp,
     patchTeamComp,
-    deleteTeamComp,
-    message
+    deleteTeamComp
   ] = useData('team-competition', 'competition_id');
 
   const [hills] = useData('ski-jumping-hill');

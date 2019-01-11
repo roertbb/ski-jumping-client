@@ -15,8 +15,7 @@ function Tournament(props) {
     getTournaments,
     addTournaments,
     patchTournaments,
-    deleteTournaments,
-    message
+    deleteTournaments
   ] = useDate('tournament');
 
   const [modElem, setModElem] = useState(null);

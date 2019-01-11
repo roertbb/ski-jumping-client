@@ -1,11 +1,23 @@
 import { useState, useEffect, useContext } from 'react';
 import queryString from 'query-string';
 import axios from '../axios';
-import useMessage from './useMessage';
 import { MessageContext } from '../context/MessageContext';
+
+const endpointToName = {
+  'ski-jumper': 'Ski Jumper',
+  coach: 'Coach',
+  team: 'Team',
+  'ski-jumping-hill': 'Ski Jumping Hill',
+  tournament: 'Tournament',
+  'individual-competition': 'Individual Competition',
+  'team-competition': 'Team Competition',
+  placement: 'Placement'
+};
 
 const useData = function(endpoint, tableId, sort = false) {
   const dataId = tableId ? tableId : `${endpoint}_id`.replace('-', '_');
+
+  const entityName = endpointToName[endpoint];
 
   const [data, setData] = useState(null);
 
@@ -32,7 +44,12 @@ const useData = function(endpoint, tableId, sort = false) {
           );
       } else throw new Error();
     } catch (error) {
-      addMessage('error fetching ...', 'danger');
+      addMessage(`Error fetching ${entityName}`, 'danger');
+      const { errorMessage } = error.response.data;
+      const statusInfo = errorMessage.length
+        ? `Error fetching ${entityName}. ${errorMessage}`
+        : `Error fetching ${entityName}`;
+      addMessage(statusInfo, 'danger');
     }
   };
 
@@ -51,10 +68,14 @@ const useData = function(endpoint, tableId, sort = false) {
             }
           })
         );
-        addMessage('succesfully deleted ...', 'success');
+        addMessage(`Succesfully deleted ${entityName}`, 'success');
       } else throw new Error();
     } catch (error) {
-      addMessage(`error deleting ...`, 'danger');
+      const { errorMessage } = error.response.data;
+      const statusInfo = errorMessage.length
+        ? `Error deleting ${entityName}. ${errorMessage}`
+        : `Error deleting ${entityName}`;
+      addMessage(statusInfo, 'danger');
     }
   };
 
@@ -63,11 +84,15 @@ const useData = function(endpoint, tableId, sort = false) {
       const response = await axios.post(`${endpoint}`, params);
       if (response.status === 200) {
         setData([...data, response.data.created]);
-        addMessage(`successfully created ...`, 'success');
+        addMessage(`Successfully created ${entityName}`, 'success');
         return true;
       } else throw new Error();
     } catch (error) {
-      addMessage(`error creating ...`, 'danger');
+      const { errorMessage } = error.response.data;
+      const statusInfo = errorMessage.length
+        ? `Error creating ${entityName}. ${errorMessage}`
+        : `Error creating ${entityName}`;
+      addMessage(statusInfo, 'danger');
       return false;
     }
   };
@@ -90,18 +115,20 @@ const useData = function(endpoint, tableId, sort = false) {
             }
           })
         );
-        addMessage(`successfully created  ...`, 'success');
+        addMessage(`Successfully updated ${entityName}`, 'success');
         return true;
       } else throw new Error();
     } catch (error) {
-      addMessage(`error updating ...`, 'danger');
+      const { errorMessage } = error.response.data;
+      const statusInfo = errorMessage.length
+        ? `Error updating ${entityName}. ${errorMessage}`
+        : `Error updating ${entityName}`;
+      addMessage(statusInfo, 'danger');
       return false;
     }
   };
 
-  const [message, setMessage] = useMessage();
-
-  return [data, getData, addData, patchData, deleteData, message];
+  return [data, getData, addData, patchData, deleteData];
 };
 
 export default useData;

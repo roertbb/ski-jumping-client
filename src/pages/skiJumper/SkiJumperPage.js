@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { Switch, Route, withRouter } from 'react-router-dom';
 import useDate from '../../hooks/useData';
 import Table from '../../components/Table';
@@ -15,8 +15,7 @@ function SkiJumper(props) {
     getSkiJumpers,
     addSkiJumpers,
     patchSkiJumpers,
-    deleteSkiJumpers,
-    message
+    deleteSkiJumpers
   ] = useDate('ski-jumper', 'person_id');
 
   const [modElem, setModElem] = useState(null);

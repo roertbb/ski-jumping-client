@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { Redirect, withRouter } from 'react-router-dom';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
@@ -10,6 +10,7 @@ import FormGroup from '../../components/FormGroup';
 import Container from '../../components/Container';
 import axios from '../../axios';
 import OverlaySpinner from '../../components/SpinnerOverlay';
+import { MessageContext } from '../../context/MessageContext';
 
 const SeriesResultValidationSchema = Yup.object().shape({
   state: Yup.string().required(`Required`),
@@ -51,6 +52,7 @@ const SeriesResultForm = ({
   };
 
   let [series, setSeries] = useState(undefined);
+
   const getSeriesData = async () => {
     const resp = await axios.get(
       `/series-result?person_id=${personId}&competition_id=${competitionId}&series_id=${seriesId}`
@@ -61,6 +63,8 @@ const SeriesResultForm = ({
   useEffect(() => {
     getSeriesData();
   }, []);
+
+  const { addMessage } = useContext(MessageContext);
 
   return (
     <>
@@ -81,6 +85,9 @@ const SeriesResultForm = ({
                 series_id: seriesId
               };
               const resp = await axios.post('/series-result', result);
+              if (resp.status === 200) {
+                addMessage('Successfully created Series Result', 'success');
+              }
             } else {
               const result = {
                 ...series,
@@ -90,6 +97,9 @@ const SeriesResultForm = ({
                 `/series-result?person_id=${personId}&competition_id=${competitionId}&series_id=${seriesId}`,
                 result
               );
+              if (resp.status === 200) {
+                addMessage('Successfully updated Series Result', 'success');
+              }
             }
             setSubmitting(false);
             history.push(`/placement/${competitionId}/${seriesId}`);
