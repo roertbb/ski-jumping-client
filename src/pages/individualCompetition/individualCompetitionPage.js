@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
-import { Switch, Route, withRouter } from 'react-router-dom';
-import useDate from '../../hooks/useData';
-import Table from '../../components/Table';
+import { Switch, Route, withRouter, Link } from 'react-router-dom';
+import useData from '../../hooks/useData';
+import { Table } from '../../components/Table';
 import ContentWrapper from '../../components/ContentWrapper';
 import Container from '../../components/Container';
 import Button from '../../components/Button';
 import IndividualCompetitionForm from './individualCompetitionForm';
 import IndividualCompetitionSearchForm from './individualCompetitionSearchFrom';
 import IndividualCompetitionDetails from './IndividualCompetitionDetails';
+import Spinner from '../../components/Spiner';
 
 function IndividualCompetition(props) {
   const [
@@ -17,7 +18,23 @@ function IndividualCompetition(props) {
     patchIndComp,
     deleteIndComp,
     message
-  ] = useDate('individual-competition', 'competition_id');
+  ] = useData('individual-competition', 'competition_id');
+
+  const [hills] = useData('ski-jumping-hill');
+  const parsedHills =
+    hills &&
+    hills.reduce((prev, hill) => {
+      prev[hill.ski_jumping_hill_id] = hill.name;
+      return prev;
+    }, {});
+
+  const [tournaments] = useData('tournament');
+  const parsedTournaments =
+    tournaments &&
+    tournaments.reduce((prev, tournament) => {
+      prev[tournament.tournament_id] = tournament.name;
+      return prev;
+    }, {});
 
   const [modElem, setModElem] = useState(null);
 
@@ -32,16 +49,88 @@ function IndividualCompetition(props) {
         <IndividualCompetitionSearchForm get={getIndComp} />
       </Container>
       <Container>
-        <Table
-          info
-          route={'individual-competition'}
-          labels={['Date', 'Tournament', 'Hill']}
-          values={['competition_date', 'tournament_id', 'ski_jumping_hill_id']}
-          items={individualCompetitions}
-          itemsKey={'competition_id'}
-          del={deleteIndComp}
-          update={updateIndComp}
-        />
+        <h3>Search results</h3>
+        {!individualCompetitions || !parsedHills || !parsedTournaments ? (
+          <Spinner />
+        ) : individualCompetitions.length === 0 ? (
+          <p>
+            Couldn't found results with such parameters{' '}
+            <span role="img" aria-label="thinking">
+              🤔
+            </span>
+          </p>
+        ) : (
+          <Table info>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Hill</th>
+                <th>Tournament</th>
+                <th>
+                  <span>Actions</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {individualCompetitions.map(item => (
+                <tr key={item.competition_id}>
+                  <td>{item.competition_date}</td>
+                  <td>
+                    {parsedHills && (
+                      <Link
+                        to={`/ski-jumping-hill/${item.ski_jumping_hill_id}`}
+                      >
+                        {parsedHills[item.ski_jumping_hill_id]}
+                      </Link>
+                    )}
+                  </td>
+                  <td>
+                    {parsedTournaments && (
+                      <Link to={`/tournament/${item.tournament_id}`}>
+                        {parsedTournaments[item.tournament_id]}
+                      </Link>
+                    )}
+                  </td>
+                  <td>
+                    <Button
+                      color="info"
+                      type="button"
+                      onClick={() =>
+                        props.history.push(
+                          `/individual-competition/${item.competition_id}`
+                        )
+                      }
+                    >
+                      <span role="img" aria-label="info">
+                        🔍
+                      </span>
+                    </Button>
+                    <Button
+                      onClick={() => updateIndComp(item)}
+                      color="edit"
+                      type="button"
+                    >
+                      <span role="img" aria-label="update">
+                        ✍
+                      </span>
+                    </Button>
+                    <Button
+                      onClick={() =>
+                        deleteIndComp({ competition_id: item.competition_id })
+                      }
+                      color="danger"
+                      type="button"
+                    >
+                      <span role="img" aria-label="delete">
+                        ❌
+                      </span>
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        )}
       </Container>
     </>
   );

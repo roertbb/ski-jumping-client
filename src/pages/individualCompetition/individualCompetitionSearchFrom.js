@@ -31,7 +31,7 @@ function IndividualCompetitionSearchForm({ get }) {
     start_gate_from: '',
     start_gate_to: '',
     tournament_id: '',
-    hill_id: '',
+    ski_jumping_hill_id: '',
     qualification_date_from: '',
     qualification_date_to: ''
   };
@@ -83,7 +83,7 @@ function IndividualCompetitionSearchForm({ get }) {
                 options={parsedTournament}
               />
               <FormGroupInput
-                name="hill_id"
+                name="ski_jumping_hill_id"
                 placeholder="ski jumping hill"
                 label="Ski Jumping Hill:"
                 options={parsedHills}
