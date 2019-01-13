@@ -21,7 +21,7 @@ import { MessageContext } from '../../context/MessageContext';
 function Placement({ history, location }) {
   const [placements, getPlacement, addPlacement] = useData(
     'placement',
-    ['ski_jumper_id', 'competition_id'],
+    ['person_id', 'competition_id'],
     'place'
   );
 

@@ -16,7 +16,7 @@ function SkiJumper(props) {
     addSkiJumpers,
     patchSkiJumpers,
     deleteSkiJumpers
-  ] = useDate('ski-jumper', 'person_id');
+  ] = useDate('ski-jumper', 'person_id', 'classification');
 
   const [modElem, setModElem] = useState(null);
 

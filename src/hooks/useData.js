@@ -45,11 +45,13 @@ const useData = function(endpoint, tableId, sort = false) {
       } else throw new Error();
     } catch (error) {
       addMessage(`Error fetching ${entityName}`, 'danger');
-      const { errorMessage } = error.response.data;
-      const statusInfo = errorMessage.length
-        ? `Error fetching ${entityName}. ${errorMessage}`
-        : `Error fetching ${entityName}`;
-      addMessage(statusInfo, 'danger');
+      if (error && error.response) {
+        const { errorMessage } = error.response.data;
+        const statusInfo = errorMessage.length
+          ? `Error fetching ${entityName}. ${errorMessage}`
+          : `Error fetching ${entityName}`;
+        addMessage(statusInfo, 'danger');
+      }
     }
   };
 
@@ -71,11 +73,13 @@ const useData = function(endpoint, tableId, sort = false) {
         addMessage(`Succesfully deleted ${entityName}`, 'success');
       } else throw new Error();
     } catch (error) {
-      const { errorMessage } = error.response.data;
-      const statusInfo = errorMessage.length
-        ? `Error deleting ${entityName}. ${errorMessage}`
-        : `Error deleting ${entityName}`;
-      addMessage(statusInfo, 'danger');
+      if (error && error.response) {
+        const { errorMessage } = error.response.data;
+        const statusInfo = errorMessage.length
+          ? `Error deleting ${entityName}. ${errorMessage}`
+          : `Error deleting ${entityName}`;
+        addMessage(statusInfo, 'danger');
+      }
     }
   };
 
@@ -88,12 +92,14 @@ const useData = function(endpoint, tableId, sort = false) {
         return true;
       } else throw new Error();
     } catch (error) {
-      const { errorMessage } = error.response.data;
-      const statusInfo = errorMessage.length
-        ? `Error creating ${entityName}. ${errorMessage}`
-        : `Error creating ${entityName}`;
-      addMessage(statusInfo, 'danger');
-      return false;
+      if (error && error.response) {
+        const { errorMessage } = error.response.data;
+        const statusInfo = errorMessage.length
+          ? `Error creating ${entityName}. ${errorMessage}`
+          : `Error creating ${entityName}`;
+        addMessage(statusInfo, 'danger');
+        return false;
+      }
     }
   };
 
@@ -119,11 +125,13 @@ const useData = function(endpoint, tableId, sort = false) {
         return true;
       } else throw new Error();
     } catch (error) {
-      const { errorMessage } = error.response.data;
-      const statusInfo = errorMessage.length
-        ? `Error updating ${entityName}. ${errorMessage}`
-        : `Error updating ${entityName}`;
-      addMessage(statusInfo, 'danger');
+      if (error && error.response) {
+        const { errorMessage } = error.response.data;
+        const statusInfo = errorMessage.length
+          ? `Error updating ${entityName}. ${errorMessage}`
+          : `Error updating ${entityName}`;
+        addMessage(statusInfo, 'danger');
+      }
       return false;
     }
   };

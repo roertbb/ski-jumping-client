@@ -67,7 +67,7 @@ function SkiJumperDetails({ match }) {
                 <tr>
                   <td>
                     <Link to={`/team/${skiJumper.team_id}`}>
-                      {skiJumper.team}
+                      {skiJumper.team.team}
                     </Link>
                   </td>
                   <td>{skiJumper.fis_id}</td>
