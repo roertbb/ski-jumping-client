@@ -16,6 +16,8 @@ import IndividualCompetition from './pages/individualCompetition/individualCompe
 import TeamCompetition from './pages/teamCompetition/TeamCompetitionPage';
 import Placement from './pages/placement/PlacementPage';
 import { MessageContextProvider } from './context/MessageContext';
+import Container from './components/Container';
+import ContentWrapper from './components/ContentWrapper';
 
 const App = function() {
   return (
@@ -27,7 +29,31 @@ const App = function() {
             <MessageContextProvider>
               <Side />
               <Switch>
-                <Route path="/" exact component={Tournament} />
+                <Route
+                  path="/"
+                  exact
+                  render={() => (
+                    <ContentWrapper>
+                      <Container>
+                        <h2>
+                          <span role="img" aria-label="skies">
+                            🎿
+                          </span>
+                          Welcome in Ski Jumping Manager
+                          <span role="img" aria-label="skies">
+                            🎿
+                          </span>
+                        </h2>
+                        <h3>
+                          <span role="img" aria-label="left">
+                            👈
+                          </span>{' '}
+                          Choose one category from left
+                        </h3>
+                      </Container>
+                    </ContentWrapper>
+                  )}
+                />
                 <Route path="/tournament" component={Tournament} />
                 <Route path="/ski-jumping-hill" component={SkiJumpingHill} />
                 <Route path="/team" component={Team} />
