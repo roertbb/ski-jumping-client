@@ -8,9 +8,9 @@ const MessageContextProvider = props => {
 
   const addMessage = (message, color) => {
     setMessages([...messages, { text: message, color }]);
-    setTimeout(() => {
-      setMessages(messages.filter(msg => msg.text !== message));
-    }, 3000);
+    setTimeout(m => {
+      setMessages(messages.filter(msg => msg.text !== m));
+    }, 2500);
   };
 
   return (

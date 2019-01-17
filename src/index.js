@@ -18,6 +18,7 @@ import Placement from './pages/placement/PlacementPage';
 import { MessageContextProvider } from './context/MessageContext';
 import Container from './components/Container';
 import ContentWrapper from './components/ContentWrapper';
+import stoch from './assets/ochochochKamilStoch.PNG';
 
 const App = function() {
   return (
@@ -34,7 +35,7 @@ const App = function() {
                   exact
                   render={() => (
                     <ContentWrapper>
-                      <Container>
+                      <Container center>
                         <h2>
                           <span role="img" aria-label="skies">
                             🎿
@@ -50,6 +51,7 @@ const App = function() {
                           </span>{' '}
                           Choose one category from left
                         </h3>
+                        <img src={stoch} alt="GochaKochaStocha" />
                       </Container>
                     </ContentWrapper>
                   )}

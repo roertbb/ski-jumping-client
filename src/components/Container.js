@@ -22,6 +22,14 @@ const Container = styled.div`
             margin-bottom: 0;
           }
         `}
+
+  ${({ center }) =>
+    center &&
+    css`
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    `}
 `;
 
 export default Container;

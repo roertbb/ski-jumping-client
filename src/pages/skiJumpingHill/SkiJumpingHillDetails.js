@@ -61,7 +61,9 @@ function SkiJumpingHillDetails({ match }) {
               </thead>
               <tbody>
                 <tr>
-                  <td>{{ n: 'normal', b: 'big', m: 'mammoth' }[hill.type]}</td>
+                  <td>
+                    {{ n: 'normal', l: 'large', m: 'mammoth' }[hill.type]}
+                  </td>
                   <td>{hill.size}</td>
                   <td>{hill.k_point}</td>
                   <td>{hill.record}</td>
